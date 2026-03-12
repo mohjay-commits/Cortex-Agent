@@ -500,10 +500,8 @@ document.head.appendChild(link);
         <option value="auto">⚡ Auto — Cortex picks best model</option>
         <option value="llama-3.3-70b-versatile">Llama 3.3 70B — Most Capable</option>
         <option value="llama-3.1-8b-instant">Llama 3.1 8B — Fastest</option>
-        <option value="deepseek-r1-distill-llama-70b">DeepSeek R1 70B — Deep Reasoning</option>
-        <option value="qwen-qwq-32b">Qwen QwQ 32B — Analytical</option>
-        <option value="gemma2-9b-it">Gemma 2 9B — Google</option>
         <option value="llama3-70b-8192">Llama 3 70B — Classic</option>
+        <option value="gemma2-9b-it">Gemma 2 9B — Google</option>
       </select>
     </div>
     <div class="s-section">API Keys</div>
@@ -636,35 +634,19 @@ const synth = window.speechSynthesis;
 let deferredInstall = null;
 
 const MODEL_SHORT = {
-  'auto':                           '⚡ auto',
-  'llama-3.3-70b-versatile':        'llama-3.3',
-  'llama-3.1-8b-instant':           'llama-3.1',
-  'llama3-70b-8192':                'llama3-70b',
-  'gemma2-9b-it':                   'gemma-2',
-  'deepseek-r1-distill-llama-70b':  'deepseek-r1',
-  'qwen-qwq-32b':                   'qwen-32b',
+  'auto':                    '⚡ auto',
+  'llama-3.3-70b-versatile': 'llama-3.3',
+  'llama-3.1-8b-instant':    'llama-3.1',
+  'llama3-70b-8192':         'llama3-70b',
+  'gemma2-9b-it':            'gemma-2',
 };
 
-// Auto model selection based on message intent
+// Auto model selection — only uses confirmed live Groq models with large context
 function selectModel(msg, intents) {
   if (curModel !== 'auto') return curModel;
-  const m = msg.toLowerCase();
-  // Deep reasoning / strategy / code / analysis
-  if (/\b(analyz|strateg|plan|reason|explain|compare|research|complex|solve|calculat|code|debug|write|essay|report|think through|break down)\b/.test(m) || msg.length > 180) {
-    return 'deepseek-r1-distill-llama-70b';
-  }
-  // Real-time data — balanced
-  if (intents.includes('crypto') || intents.includes('stocks') || intents.includes('news') || intents.includes('search')) {
-    return 'llama-3.3-70b-versatile';
-  }
-  // Quick casual chat — fastest
-  if (msg.length < 80 && !intents.length) {
-    return 'llama-3.1-8b-instant';
-  }
-  // Default
+  // Always use the most capable model — llama-3.1-8b has too small a token limit for real conversations
   return 'llama-3.3-70b-versatile';
-}
-// ═══ PWA INSTALL ═══
+}// ═══ PWA INSTALL ═══
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredInstall = e;
@@ -866,6 +848,9 @@ CORE INTELLIGENCE RULES:
 WHEN YOU HAVE LIVE DATA:
 - Use it confidently and specifically — exact numbers, exact times
 - Don't just regurgitate the data — interpret it, give context, give an opinion
+
+CRITICAL SELF-AWARENESS:
+You are a single HTML file running in a browser. You CANNOT actually install libraries, run Python, access databases, or implement code on your own. When asked about upgrades or improvements, be honest — describe what CAN be done to your HTML/JS code, not server-side fantasies. Never claim you "implemented" something you haven't. If Jay wants an upgrade, describe it clearly so a developer (or he himself) can actually build it.
 
 RESPONSE FORMAT:
 - Mobile first — short paragraphs, line breaks
@@ -1101,15 +1086,16 @@ async function sendMessage(override) {
   showThinking();
   try {
     const modelToUse = selectModel(msg, intents);
-    // Update badge to show which model is being used
     document.getElementById('model-display').textContent = MODEL_SHORT[modelToUse] || modelToUse.split('-').slice(0,2).join('-');
+    // Only send last 10 turns to Groq to stay within token limits
+    const trimmedHistory = history.slice(-10);
     const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
       body:JSON.stringify({
         model: modelToUse,
         max_tokens:1024, temperature:0.8,
-        messages:[{role:'system',content:buildSystem(toolCtx)},...history]
+        messages:[{role:'system',content:buildSystem(toolCtx)},...trimmedHistory]
       })
     });
     const d = await r.json();
@@ -1275,4 +1261,3 @@ if(synth){synth.getVoices();synth.addEventListener('voiceschanged',()=>synth.get
 </script>
 </body>
 </html>
-
