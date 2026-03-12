@@ -7,406 +7,441 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Cortex">
-<meta name="theme-color" content="#07090e">
-<meta name="description" content="Cortex — Your Private AI Agent">
+<meta name="theme-color" content="#050608">
+<meta name="description" content="Cortex — Personal AI Command Center">
 <title>Cortex</title>
-
-<!-- PWA Manifest inline -->
 <script>
 const manifestData = {
-  name: "Cortex AI",
-  short_name: "Cortex",
-  description: "Your private real-time AI agent",
-  start_url: "./",
-  display: "standalone",
-  background_color: "#07090e",
-  theme_color: "#07090e",
-  orientation: "portrait",
-  icons: [
-    { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%23e8ff47'/><text x='96' y='130' text-anchor='middle' font-family='Arial' font-weight='900' font-size='80' fill='%2307090e'>CX</text></svg>", sizes: "192x192", type: "image/svg+xml" },
-    { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%23e8ff47'/><text x='256' y='340' text-anchor='middle' font-family='Arial' font-weight='900' font-size='220' fill='%2307090e'>CX</text></svg>", sizes: "512x512", type: "image/svg+xml" }
+  name:"Cortex AI",short_name:"Cortex",description:"Personal AI Command Center",
+  start_url:"./",display:"standalone",background_color:"#050608",theme_color:"#050608",
+  orientation:"portrait",
+  icons:[
+    {src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%23f5a623'/><text x='96' y='135' text-anchor='middle' font-family='Arial' font-weight='900' font-size='90' fill='%23050608'>CX</text></svg>",sizes:"192x192",type:"image/svg+xml"},
+    {src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%23f5a623'/><text x='256' y='360' text-anchor='middle' font-family='Arial' font-weight='900' font-size='240' fill='%23050608'>CX</text></svg>",sizes:"512x512",type:"image/svg+xml"}
   ]
 };
-const blob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
-const manifestURL = URL.createObjectURL(blob);
-const link = document.createElement('link');
-link.rel = 'manifest'; link.href = manifestURL;
-document.head.appendChild(link);
+const mb=new Blob([JSON.stringify(manifestData)],{type:'application/json'});
+const ml=document.createElement('link');ml.rel='manifest';ml.href=URL.createObjectURL(mb);
+document.head.appendChild(ml);
 </script>
-
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #07090e;
-    --s1: #0c0f17;
-    --s2: #111620;
-    --s3: #161c28;
-    --border: #1d2535;
-    --border2: #252f42;
-    --a1: #e8ff47;
-    --a2: #00cfff;
-    --a3: #ff6b35;
-    --green: #00ff9d;
-    --purple: #b47fff;
-    --text: #eef1f8;
-    --text2: #8a95aa;
-    --text3: #4a5568;
-    --r: 18px;
-  }
-  html { height: 100%; }
-  body {
-    height: 100dvh; background: var(--bg);
-    color: var(--text); font-family: 'Outfit', sans-serif;
-    overflow: hidden; -webkit-font-smoothing: antialiased;
-  }
-  .glow {
-    position: fixed; pointer-events: none; z-index: 0;
-    border-radius: 50%; filter: blur(80px); opacity: 0.06;
-  }
-  .glow-1 { top: -100px; left: -100px; width: 400px; height: 400px; background: var(--a1); }
-  .glow-2 { bottom: -100px; right: -100px; width: 350px; height: 350px; background: var(--a2); }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#050608;
+  --bg1:#080a0f;
+  --bg2:#0d1018;
+  --bg3:#111520;
+  --bg4:#161b28;
+  --border:#1a2030;
+  --border2:#222d42;
+  --gold:#f5a623;
+  --gold2:#ffc45e;
+  --gold-dim:rgba(245,166,35,0.08);
+  --gold-border:rgba(245,166,35,0.18);
+  --cyan:#00e5ff;
+  --cyan-dim:rgba(0,229,255,0.06);
+  --green:#00e676;
+  --red:#ff3d57;
+  --text:#dde4f0;
+  --text2:#7a8799;
+  --text3:#374155;
+  --r:14px;
+  --mono:'Space Mono',monospace;
+  --sans:'Syne',sans-serif;
+}
+html{height:100%;}
+body{
+  height:100dvh;background:var(--bg);color:var(--text);
+  font-family:var(--sans);overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
 
-  #app {
-    position: relative; z-index: 1;
-    display: flex; flex-direction: column;
-    height: 100dvh; max-width: 520px; margin: 0 auto;
-  }
+/* ── SCAN LINE EFFECT ── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:1000;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
+}
 
-  /* ═══ HEADER ═══ */
-  header {
-    flex-shrink: 0; padding: 12px 16px 10px;
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-    background: rgba(7,9,14,0.92);
-    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-  }
-  .logo { display: flex; align-items: center; gap: 10px; }
-  .logo-mark svg { width: 32px; height: 32px; }
-  .logo-name { font-weight: 800; font-size: 19px; letter-spacing: -0.3px; }
-  .logo-name .cx { color: var(--a1); }
-  .logo-name .ver { font-size: 10px; opacity: 0.35; font-weight: 400; margin-left: 2px; }
-  .header-right { display: flex; align-items: center; gap: 6px; }
-  .model-badge {
-    background: rgba(0,207,255,0.07); border: 1px solid rgba(0,207,255,0.18);
-    border-radius: 20px; padding: 4px 9px;
-    font-size: 10px; font-weight: 600; color: var(--a2);
-    font-family: 'Fira Code', monospace; cursor: pointer;
-  }
-  .status-pill {
-    display: flex; align-items: center; gap: 5px;
-    background: rgba(232,255,71,0.07); border: 1px solid rgba(232,255,71,0.15);
-    border-radius: 20px; padding: 4px 9px;
-    font-size: 10px; font-weight: 600; color: var(--a1);
-  }
-  .status-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--a1); box-shadow: 0 0 6px var(--a1);
-    animation: breathe 2.5s ease-in-out infinite;
-  }
-  @keyframes breathe { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
-  .icon-btn {
-    width: 30px; height: 30px; border-radius: 9px;
-    background: var(--s2); border: 1px solid var(--border);
-    color: var(--text2); display: flex; align-items: center;
-    justify-content: center; cursor: pointer; font-size: 13px;
-    -webkit-tap-highlight-color: transparent; transition: all .15s;
-  }
-  .icon-btn:active { transform: scale(.88); }
+/* ── AMBIENT GLOW ── */
+.amb{position:fixed;pointer-events:none;border-radius:50%;filter:blur(100px);opacity:0.04;}
+.amb-1{top:-150px;left:-100px;width:500px;height:500px;background:var(--gold);}
+.amb-2{bottom:-150px;right:-100px;width:400px;height:400px;background:var(--cyan);}
 
-  /* ═══ MESSAGES ═══ */
-  #messages {
-    flex: 1; overflow-y: auto;
-    padding: 14px 13px 8px;
-    display: flex; flex-direction: column; gap: 14px;
-    overscroll-behavior: contain;
-  }
-  #messages::-webkit-scrollbar { width: 0; }
+/* ── APP SHELL ── */
+#app{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;
+  height:100dvh;max-width:540px;margin:0 auto;
+}
 
-  .msg {
-    display: flex; flex-direction: column; gap: 5px;
-    animation: msgIn .26s cubic-bezier(.34,1.4,.64,1);
-  }
-  @keyframes msgIn { from{opacity:0;transform:translateY(12px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
-  .msg.user { align-items: flex-end; }
-  .msg.ai { align-items: flex-start; }
-  .msg-meta { display: flex; align-items: center; gap: 6px; padding: 0 4px; }
-  .msg-avatar {
-    width: 20px; height: 20px; border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 800;
-  }
-  .msg.ai .msg-avatar { background: linear-gradient(135deg,rgba(232,255,71,.2),rgba(0,207,255,.2)); color: var(--a1); }
-  .msg.user .msg-avatar { background: rgba(255,107,53,.15); color: var(--a3); }
-  .msg-name { font-size: 11px; font-weight: 600; letter-spacing: .3px; }
-  .msg.ai .msg-name { color: var(--a1); opacity: .8; }
-  .msg.user .msg-name { color: var(--a3); opacity: .8; }
-  .msg-time { font-size: 10px; color: var(--text3); font-family:'Fira Code',monospace; margin-left: auto; }
-  .bubble {
-    max-width: 92%; padding: 12px 15px;
-    font-size: 14px; line-height: 1.65;
-    word-break: break-word; position: relative;
-  }
-  .msg.user .bubble {
-    background: #0f1922; border: 1px solid rgba(255,107,53,.12);
-    border-radius: var(--r) var(--r) 4px var(--r); color: var(--text);
-  }
-  .msg.ai .bubble {
-    background: #0a1410; border: 1px solid rgba(232,255,71,.08);
-    border-radius: var(--r) var(--r) var(--r) 4px; color: rgba(238,241,248,.92);
-  }
-  .bubble.speaking::after {
-    content:''; position:absolute; bottom:-1px; left:16px; right:16px;
-    height:2px; background:linear-gradient(90deg,var(--a1),var(--a2));
-    border-radius:2px; animation:speakBar 2s linear infinite;
-  }
-  @keyframes speakBar { 0%{transform:scaleX(0);transform-origin:left} 100%{transform:scaleX(1);transform-origin:left} }
+/* ── HEADER ── */
+header{
+  flex-shrink:0;
+  background:rgba(5,6,8,0.95);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  position:relative;overflow:hidden;
+}
+.header-scan{
+  position:absolute;bottom:0;left:-100%;width:60%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  animation:scan 4s ease-in-out infinite;
+}
+@keyframes scan{0%{left:-60%}100%{left:120%}}
 
-  /* TOOL CARD */
-  .tool-card {
-    background: rgba(0,207,255,0.05); border: 1px solid rgba(0,207,255,0.15);
-    border-radius: 12px; padding: 9px 13px;
-    font-size: 12px; color: var(--a2);
-    display: flex; align-items: center; gap: 8px;
-    font-family: 'Fira Code', monospace;
-    animation: msgIn .2s ease; max-width: 92%;
-  }
-  .tool-card.done { border-color: rgba(0,255,157,0.2); color: var(--green); background: rgba(0,255,157,0.04); }
-  .tool-card.error { border-color: rgba(255,107,53,0.2); color: var(--a3); background: rgba(255,107,53,0.04); }
-  .spin { animation: spin .8s linear infinite; display: inline-block; }
-  @keyframes spin { to{transform:rotate(360deg)} }
+.header-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px 8px;
+}
+.logo{display:flex;align-items:center;gap:9px;}
+.logo-box{
+  width:32px;height:32px;border-radius:9px;
+  background:var(--gold);display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-weight:700;font-size:11px;color:var(--bg);
+  letter-spacing:-0.5px;position:relative;
+}
+.logo-box::after{
+  content:'';position:absolute;inset:-2px;border-radius:11px;
+  background:var(--gold);opacity:0.15;filter:blur(6px);z-index:-1;
+}
+.logo-name{font-weight:800;font-size:18px;letter-spacing:-0.5px;}
+.logo-name em{color:var(--gold);font-style:normal;}
+.logo-ver{font-family:var(--mono);font-size:9px;color:var(--text3);margin-left:3px;}
 
-  /* THINKING */
-  .thinking-bubble {
-    background: #0a1410; border: 1px solid rgba(232,255,71,.08);
-    border-radius: var(--r) var(--r) var(--r) 4px;
-    padding: 14px 18px; display: flex; align-items: center; gap: 5px;
-  }
-  .dot { width:6px;height:6px;border-radius:50%;animation:dotP 1.4s ease-in-out infinite;opacity:.3; }
-  .dot:nth-child(1){background:var(--a1)}
-  .dot:nth-child(2){background:var(--a2);animation-delay:.2s}
-  .dot:nth-child(3){background:var(--a3);animation-delay:.4s}
-  @keyframes dotP{0%,80%,100%{transform:scale(.7);opacity:.3}40%{transform:scale(1.2);opacity:1}}
+.header-right{display:flex;align-items:center;gap:5px;}
+.hbtn{
+  width:30px;height:30px;border-radius:8px;
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--text2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:13px;-webkit-tap-highlight-color:transparent;
+  transition:all .15s;
+}
+.hbtn:active{transform:scale(.88);background:var(--bg4);}
+.status-chip{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(0,230,118,0.07);border:1px solid rgba(0,230,118,0.18);
+  border-radius:20px;padding:4px 9px;
+  font-family:var(--mono);font-size:9px;font-weight:700;color:var(--green);
+}
+.pulse{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
 
-  /* WELCOME */
-  #welcome {
-    display:flex;flex-direction:column;align-items:center;
-    justify-content:center;text-align:center;
-    padding:16px 20px;gap:11px;flex:1;min-height:260px;
-  }
-  .welcome-ring { position:relative;width:72px;height:72px;margin-bottom:4px; }
-  .welcome-ring svg { width:72px;height:72px;animation:spin 14s linear infinite; }
-  .center-icon { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px; }
-  #welcome h2 { font-weight:800;font-size:23px;letter-spacing:-.5px; }
-  #welcome h2 span { color:var(--a1); }
-  #welcome p { font-size:13px;color:var(--text2);max-width:250px;line-height:1.6; }
-  .live-badges { display:flex;flex-wrap:wrap;gap:6px;justify-content:center; }
-  .lb {
-    display:flex;align-items:center;gap:5px;
-    border-radius:20px;padding:5px 11px;
-    font-size:11px;font-weight:600;
-  }
-  .lb-s { background:rgba(232,255,71,.07);border:1px solid rgba(232,255,71,.15);color:var(--a1); }
-  .lb-c { background:rgba(0,255,157,.07);border:1px solid rgba(0,255,157,.15);color:var(--green); }
-  .lb-n { background:rgba(0,207,255,.07);border:1px solid rgba(0,207,255,.15);color:var(--a2); }
-  .lb-u { background:rgba(255,107,53,.07);border:1px solid rgba(255,107,53,.15);color:var(--a3); }
-  .lb-p { background:rgba(180,127,255,.07);border:1px solid rgba(180,127,255,.15);color:var(--purple); }
-  .quick-chips { display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:2px; }
-  .chip {
-    background:var(--s2);border:1px solid var(--border2);
-    border-radius:20px;padding:7px 13px;
-    font-size:12px;font-weight:500;color:var(--text2);
-    cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;
-  }
-  .chip:active { background:rgba(232,255,71,.08);border-color:rgba(232,255,71,.25);color:var(--a1);transform:scale(.95); }
+/* ── TICKER BAR ── */
+#ticker{
+  display:flex;gap:0;overflow:hidden;
+  border-top:1px solid var(--border);
+  background:var(--bg1);
+  position:relative;
+}
+#ticker::before,#ticker::after{
+  content:'';position:absolute;top:0;bottom:0;width:30px;z-index:2;pointer-events:none;
+}
+#ticker::before{left:0;background:linear-gradient(90deg,var(--bg1),transparent);}
+#ticker::after{right:0;background:linear-gradient(-90deg,var(--bg1),transparent);}
+.ticker-track{
+  display:flex;gap:20px;padding:7px 16px;
+  animation:tickerScroll 30s linear infinite;
+  white-space:nowrap;
+}
+.ticker-track:hover{animation-play-state:paused;}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tick-item{
+  display:flex;align-items:center;gap:6px;cursor:pointer;
+  font-family:var(--mono);font-size:10px;
+}
+.tick-sym{color:var(--text2);font-weight:700;letter-spacing:.5px;}
+.tick-price{color:var(--text);font-weight:400;}
+.tick-chg{font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;}
+.tick-up{color:var(--green);background:rgba(0,230,118,0.1);}
+.tick-dn{color:var(--red);background:rgba(255,61,87,0.1);}
+.tick-neu{color:var(--text2);background:var(--bg3);}
+.tick-dot{width:3px;height:3px;border-radius:50%;background:var(--border2);}
 
-  /* INSTALL BANNER */
-  #install-banner {
-    display: none; align-items: center; justify-content: space-between;
-    padding: 10px 16px; gap: 10px;
-    background: rgba(232,255,71,0.07); border-bottom: 1px solid rgba(232,255,71,0.15);
-  }
-  #install-banner.show { display: flex; }
-  .install-text { font-size: 12px; color: var(--a1); font-weight: 500; }
-  .install-btn {
-    background: var(--a1); color: var(--bg); border: none;
-    border-radius: 10px; padding: 7px 14px;
-    font-family: 'Outfit', sans-serif; font-weight: 700;
-    font-size: 12px; cursor: pointer; flex-shrink: 0;
-  }
-  .install-dismiss { color: var(--text3); font-size: 16px; cursor: pointer; padding: 4px; }
+/* ── MARKET PANEL ── */
+#market-panel{
+  flex-shrink:0;
+  display:none;flex-direction:column;gap:0;
+  border-bottom:1px solid var(--border);
+  background:var(--bg1);
+  max-height:220px;overflow-y:auto;
+}
+#market-panel.open{display:flex;}
+.market-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);}
+.market-card{
+  background:var(--bg1);padding:10px 14px;
+  display:flex;flex-direction:column;gap:3px;
+}
+.mc-label{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;}
+.mc-price{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--text);}
+.mc-price.gold-col{color:var(--gold);}
+.mc-chg{font-family:var(--mono);font-size:10px;}
+.mc-chg.up{color:var(--green);}
+.mc-chg.dn{color:var(--red);}
+.mc-chg.neu{color:var(--text2);}
+.market-section{padding:8px 14px 4px;font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:1.5px;border-top:1px solid var(--border);}
 
-  /* PANELS */
-  .panel {
-    position:fixed;inset:0;z-index:50;
-    display:none;flex-direction:column;
-    background:rgba(7,9,14,.97);
-    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-    padding:24px 20px;
-  }
-  .panel.open { display:flex; }
-  .panel-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:6px; }
-  .panel-header h3 { font-weight:800;font-size:20px; }
-  .panel-close {
-    width:34px;height:34px;border-radius:10px;
-    background:var(--s2);border:1px solid var(--border);
-    color:var(--text2);display:flex;align-items:center;
-    justify-content:center;cursor:pointer;font-size:16px;
-  }
-  .panel-sub { font-size:12px;color:var(--text3);margin-bottom:16px;line-height:1.5; }
+/* ── MESSAGES ── */
+#messages{
+  flex:1;overflow-y:auto;
+  padding:12px 12px 6px;
+  display:flex;flex-direction:column;gap:12px;
+  overscroll-behavior:contain;
+  scrollbar-width:none;
+}
+#messages::-webkit-scrollbar{width:0;}
 
-  /* MEMORY */
-  #mem-list { flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:14px; }
-  .mem-item {
-    background:var(--s2);border:1px solid var(--border);border-radius:12px;
-    padding:11px 14px;font-size:13px;color:var(--text2);line-height:1.5;
-    display:flex;align-items:flex-start;gap:10px;cursor:pointer;
-  }
-  .mem-item::before { content:'◆';color:var(--a1);font-size:8px;margin-top:3px;flex-shrink:0;opacity:.6; }
-  .mem-empty { text-align:center;color:var(--text3);font-size:13px;padding:40px 20px; }
-  .mem-row { display:flex;gap:8px; }
-  .mem-row input {
-    flex:1;background:var(--s2);border:1px solid var(--border2);
-    border-radius:12px;padding:12px 14px;color:var(--text);
-    font-family:'Outfit',sans-serif;font-size:13px;outline:none;
-  }
-  .mem-row input:focus { border-color:rgba(232,255,71,.25); }
-  .mem-add { background:var(--a1);color:var(--bg);border:none;border-radius:12px;padding:0 16px;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;cursor:pointer; }
+.msg{display:flex;flex-direction:column;gap:4px;animation:msgIn .22s cubic-bezier(.34,1.4,.64,1);}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+.msg.user{align-items:flex-end;}
+.msg.ai{align-items:flex-start;}
 
-  /* ALERTS PANEL */
-  #alerts-list { flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:14px; }
-  .alert-item {
-    background:var(--s2);border:1px solid var(--border);border-radius:12px;
-    padding:12px 14px;font-size:13px;display:flex;align-items:center;gap:10px;
-  }
-  .alert-item .alert-icon { font-size:16px; }
-  .alert-item .alert-text { flex:1;color:var(--text2);line-height:1.4; }
-  .alert-item .alert-del { color:var(--text3);cursor:pointer;font-size:16px;padding:4px; }
-  .alert-empty { text-align:center;color:var(--text3);font-size:13px;padding:30px 20px; }
-  .alert-form { display:flex;flex-direction:column;gap:8px; }
-  .alert-form select, .alert-form input {
-    background:var(--s2);border:1px solid var(--border2);border-radius:12px;
-    padding:11px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;outline:none;
-  }
-  .alert-form select:focus, .alert-form input:focus { border-color:rgba(232,255,71,.25); }
-  .alert-form select option { background:var(--s2); }
-  .alert-add { background:var(--a1);color:var(--bg);border:none;border-radius:12px;padding:12px;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;cursor:pointer;width:100%; }
+.msg-meta{display:flex;align-items:center;gap:6px;padding:0 2px;}
+.msg-avatar{
+  width:18px;height:18px;border-radius:5px;
+  display:flex;align-items:center;justify-content:center;font-size:10px;
+}
+.msg.ai .msg-avatar{background:rgba(245,166,35,0.15);color:var(--gold);}
+.msg.user .msg-avatar{background:rgba(0,229,255,0.1);color:var(--cyan);}
+.msg-name{font-size:10px;font-weight:700;letter-spacing:.5px;font-family:var(--mono);}
+.msg.ai .msg-name{color:var(--gold);opacity:.7;}
+.msg.user .msg-name{color:var(--cyan);opacity:.7;}
+.msg-time{font-family:var(--mono);font-size:9px;color:var(--text3);margin-left:auto;}
 
-  /* SETTINGS */
-  .settings-scroll { flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:13px;margin-bottom:13px; }
-  .s-row { display:flex;flex-direction:column;gap:6px; }
-  .s-row label { font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3); }
-  .s-row input, .s-row select {
-    background:var(--s2);border:1px solid var(--border2);border-radius:12px;
-    padding:12px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;outline:none;width:100%;
-  }
-  .s-row input:focus, .s-row select:focus { border-color:rgba(232,255,71,.25); }
-  .s-row select option { background:var(--s2); }
-  .s-hint { font-size:11px;color:var(--text3);line-height:1.5; }
-  .s-hint a { color:var(--a2);text-decoration:none; }
-  .s-section { font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding:6px 0 2px;border-top:1px solid var(--border);margin-top:4px; }
-  .save-btn { width:100%;padding:14px;background:var(--a1);color:var(--bg);border:none;border-radius:14px;font-family:'Outfit',sans-serif;font-weight:800;font-size:15px;cursor:pointer; }
-  .danger-btn { width:100%;padding:11px;background:transparent;border:1px solid rgba(255,107,53,.2);border-radius:14px;color:rgba(255,107,53,.7);font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;margin-top:6px; }
+.bubble{
+  max-width:91%;padding:11px 14px;
+  font-size:13.5px;line-height:1.65;word-break:break-word;
+}
+.msg.user .bubble{
+  background:var(--bg3);border:1px solid rgba(0,229,255,0.08);
+  border-radius:var(--r) var(--r) 3px var(--r);color:var(--text);
+}
+.msg.ai .bubble{
+  background:var(--bg2);border:1px solid rgba(245,166,35,0.07);
+  border-radius:var(--r) var(--r) var(--r) 3px;color:rgba(221,228,240,.92);
+}
+.bubble.speaking{border-color:rgba(245,166,35,0.3);box-shadow:0 0 12px rgba(245,166,35,0.06);}
 
-  /* VOICE BAR */
-  #voice-bar { display:none;align-items:center;justify-content:center;gap:3px;padding:4px 0 6px; }
-  #voice-bar.show { display:flex; }
-  .vb { width:3px;background:var(--a1);border-radius:3px;animation:vwave .7s ease-in-out infinite; }
-  .vb:nth-child(1){height:8px}
-  .vb:nth-child(2){height:18px;animation-delay:.1s;background:var(--a2)}
-  .vb:nth-child(3){height:26px;animation-delay:.15s}
-  .vb:nth-child(4){height:18px;animation-delay:.1s;background:var(--a2)}
-  .vb:nth-child(5){height:8px}
-  .vb:nth-child(6){height:14px;animation-delay:.2s;background:var(--a3)}
-  .vb:nth-child(7){height:22px;animation-delay:.25s}
-  @keyframes vwave{0%,100%{transform:scaleY(.4);opacity:.5}50%{transform:scaleY(1);opacity:1}}
+/* TOOL CARD */
+.tool-card{
+  background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.12);
+  border-radius:10px;padding:7px 12px;max-width:88%;
+  font-family:var(--mono);font-size:11px;color:var(--cyan);
+  display:flex;align-items:center;gap:7px;animation:msgIn .15s ease;
+}
+.tool-card.done{border-color:rgba(0,230,118,0.18);color:var(--green);background:rgba(0,230,118,0.04);}
+.tool-card.error{border-color:rgba(255,61,87,0.18);color:var(--red);background:rgba(255,61,87,0.04);}
+.spin{animation:spin .7s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-  /* INPUT */
-  #input-area {
-    flex-shrink:0;padding:6px 13px 16px;
-    background:rgba(7,9,14,.93);
-    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-    border-top:1px solid var(--border);
-  }
-  .input-wrap {
-    display:flex;align-items:flex-end;gap:8px;
-    background:var(--s2);border:1px solid var(--border2);
-    border-radius:22px;padding:8px 8px 8px 16px;
-    transition:border-color .2s,box-shadow .2s;
-  }
-  .input-wrap:focus-within { border-color:rgba(232,255,71,.2);box-shadow:0 0 0 3px rgba(232,255,71,.04); }
-  #user-input {
-    flex:1;background:transparent;border:none;outline:none;color:var(--text);
-    font-family:'Outfit',sans-serif;font-size:15px;font-weight:400;
-    line-height:1.5;resize:none;min-height:24px;max-height:110px;padding:3px 0;
-  }
-  #user-input::placeholder { color:var(--text3); }
-  .iBtn {
-    width:38px;height:38px;border-radius:14px;border:none;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-    flex-shrink:0;transition:all .15s;-webkit-tap-highlight-color:transparent;
-  }
-  #mic-btn { background:var(--s3);border:1px solid var(--border2);color:var(--text2); }
-  #mic-btn.listening { background:rgba(232,255,71,.1);border-color:rgba(232,255,71,.4);color:var(--a1);box-shadow:0 0 12px rgba(232,255,71,.15); }
-  #mic-btn:active { transform:scale(.9); }
-  #send-btn { background:var(--a1);color:var(--bg); }
-  #send-btn:active { transform:scale(.9); }
-  #send-btn:disabled { opacity:.2;cursor:not-allowed;transform:none; }
-  .input-hint { text-align:center;font-size:10px;color:var(--text3);margin-top:7px;letter-spacing:.3px;font-family:'Fira Code',monospace; }
+/* THINKING */
+.thinking-bubble{
+  background:var(--bg2);border:1px solid rgba(245,166,35,0.07);
+  border-radius:var(--r) var(--r) var(--r) 3px;
+  padding:13px 18px;display:flex;align-items:center;gap:5px;
+}
+.dot{width:5px;height:5px;border-radius:50%;animation:dp 1.4s ease-in-out infinite;opacity:.3;}
+.dot:nth-child(1){background:var(--gold)}
+.dot:nth-child(2){background:var(--cyan);animation-delay:.2s}
+.dot:nth-child(3){background:var(--green);animation-delay:.4s}
+@keyframes dp{0%,80%,100%{transform:scale(.6);opacity:.3}40%{transform:scale(1.2);opacity:1}}
 
-  /* API MODAL */
-  #api-modal {
-    position:fixed;inset:0;z-index:100;background:var(--bg);
-    display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;
-  }
-  .modal-inner { width:100%;max-width:380px;display:flex;flex-direction:column;gap:14px;padding:4px 0; }
-  .modal-top { display:flex;align-items:center;gap:12px;margin-bottom:2px; }
-  .modal-icon {
-    width:44px;height:44px;border-radius:13px;
-    background:linear-gradient(135deg,rgba(232,255,71,.15),rgba(0,207,255,.15));
-    border:1px solid rgba(232,255,71,.2);
-    display:flex;align-items:center;justify-content:center;font-size:22px;
-  }
-  .modal-title { font-weight:800;font-size:26px;letter-spacing:-.5px; }
-  .modal-title span { color:var(--a1); }
-  .modal-desc { font-size:13px;color:var(--text2);line-height:1.6; }
-  .field { display:flex;flex-direction:column;gap:6px; }
-  .field label { font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3); }
-  .field input {
-    background:var(--s2);border:1px solid var(--border2);border-radius:13px;
-    padding:13px 15px;color:var(--text);font-family:'Fira Code',monospace;
-    font-size:13px;outline:none;transition:border-color .2s;width:100%;
-  }
-  .field input:focus { border-color:rgba(232,255,71,.3); }
-  .field input::placeholder { color:var(--text3); }
-  .field-hint { font-size:11px;color:var(--text3); }
-  .field-hint a { color:var(--a2);text-decoration:none; }
-  .launch-btn { width:100%;padding:15px;background:var(--a1);border:none;border-radius:14px;color:var(--bg);font-family:'Outfit',sans-serif;font-weight:800;font-size:15px;cursor:pointer; }
-  .launch-btn:active { transform:scale(.98); }
-  .modal-note { font-size:11px;color:var(--text3);text-align:center; }
+/* ── QUICK ACTIONS ── */
+#quick-actions{
+  flex-shrink:0;padding:6px 12px 4px;
+  display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
+}
+#quick-actions::-webkit-scrollbar{display:none;}
+.qa{
+  flex-shrink:0;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:20px;padding:6px 12px;
+  font-family:var(--mono);font-size:10px;color:var(--text2);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .15s;
+  white-space:nowrap;
+}
+.qa:active{background:var(--gold-dim);border-color:var(--gold-border);color:var(--gold);transform:scale(.95);}
 
-  /* TOAST */
-  #toast {
-    position:fixed;bottom:90px;left:50%;
-    transform:translateX(-50%) translateY(16px);
-    background:rgba(255,107,53,.12);border:1px solid rgba(255,107,53,.25);
-    color:#ff8c5a;padding:10px 18px;border-radius:20px;
-    font-size:12px;font-weight:500;opacity:0;transition:all .25s;
-    pointer-events:none;z-index:200;max-width:90%;text-align:center;
-  }
-  #toast.show { opacity:1;transform:translateX(-50%) translateY(0); }
-  #toast.ok { background:rgba(0,255,157,.1);border-color:rgba(0,255,157,.2);color:var(--green); }
+/* ── INPUT AREA ── */
+#input-area{
+  flex-shrink:0;padding:6px 12px 16px;
+  background:rgba(5,6,8,0.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+}
+#voice-bar{display:none;align-items:center;justify-content:center;gap:3px;padding:3px 0 6px;}
+#voice-bar.show{display:flex;}
+.vb{width:2px;border-radius:2px;background:var(--gold);animation:vw .6s ease-in-out infinite;}
+.vb:nth-child(1){height:6px}.vb:nth-child(2){height:14px;animation-delay:.1s;background:var(--cyan)}.vb:nth-child(3){height:20px;animation-delay:.15s}.vb:nth-child(4){height:14px;animation-delay:.1s;background:var(--cyan)}.vb:nth-child(5){height:6px}.vb:nth-child(6){height:10px;animation-delay:.2s;background:var(--green)}.vb:nth-child(7){height:16px;animation-delay:.25s}
+@keyframes vw{0%,100%{transform:scaleY(.3);opacity:.4}50%{transform:scaleY(1);opacity:1}}
+
+.input-wrap{
+  display:flex;align-items:flex-end;gap:7px;
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:18px;padding:8px 8px 8px 14px;transition:border-color .2s,box-shadow .2s;
+}
+.input-wrap:focus-within{border-color:rgba(245,166,35,0.25);box-shadow:0 0 0 3px rgba(245,166,35,0.04);}
+#user-input{
+  flex:1;background:transparent;border:none;outline:none;
+  color:var(--text);font-family:var(--sans);font-size:14px;
+  line-height:1.5;resize:none;min-height:22px;max-height:100px;padding:2px 0;
+}
+#user-input::placeholder{color:var(--text3);}
+.ibtn{
+  width:36px;height:36px;border-radius:12px;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .15s;-webkit-tap-highlight-color:transparent;
+}
+#mic-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);}
+#mic-btn.listening{background:rgba(245,166,35,0.1);border-color:rgba(245,166,35,0.4);color:var(--gold);box-shadow:0 0 12px rgba(245,166,35,0.15);}
+#mic-btn:active,#send-btn:active{transform:scale(.88);}
+#send-btn{background:var(--gold);color:var(--bg);}
+#send-btn:disabled{opacity:.2;cursor:not-allowed;transform:none;}
+.input-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:5px 2px 0;
+}
+.model-chip{
+  font-family:var(--mono);font-size:9px;color:var(--text3);
+  display:flex;align-items:center;gap:4px;cursor:pointer;
+}
+.model-chip span{color:var(--gold);opacity:.6;}
+.input-hint{font-family:var(--mono);font-size:9px;color:var(--text3);}
+
+/* ── PANELS ── */
+.panel{
+  position:fixed;inset:0;z-index:50;
+  display:none;flex-direction:column;
+  background:rgba(5,6,8,.98);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  padding:20px 16px;
+}
+.panel.open{display:flex;}
+.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+.panel-header h3{font-weight:800;font-size:18px;letter-spacing:-.3px;}
+.panel-close{
+  width:32px;height:32px;border-radius:9px;
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--text2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:14px;
+}
+.panel-sub{font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:14px;line-height:1.6;}
+
+/* MEMORY */
+#mem-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.mem-item{
+  background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:10px 13px;font-size:12px;color:var(--text2);line-height:1.5;
+  display:flex;align-items:flex-start;gap:8px;cursor:pointer;
+}
+.mem-item::before{content:'◆';color:var(--gold);font-size:7px;margin-top:4px;flex-shrink:0;opacity:.5;}
+.mem-item:active{border-color:rgba(255,61,87,0.3);background:rgba(255,61,87,0.04);}
+.mem-empty{text-align:center;color:var(--text3);font-size:12px;padding:30px 20px;font-family:var(--mono);}
+.mem-row{display:flex;gap:7px;}
+.mem-row input{
+  flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;
+  padding:11px 13px;color:var(--text);font-family:var(--sans);font-size:13px;outline:none;
+}
+.mem-row input:focus{border-color:rgba(245,166,35,0.25);}
+.mem-add{background:var(--gold);color:var(--bg);border:none;border-radius:10px;padding:0 15px;font-family:var(--sans);font-weight:700;font-size:13px;cursor:pointer;}
+
+/* ALERTS */
+#alerts-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.alert-item{
+  background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:10px 13px;font-size:12px;display:flex;align-items:center;gap:9px;
+}
+.alert-text{flex:1;color:var(--text2);line-height:1.4;}
+.alert-del{color:var(--text3);cursor:pointer;font-size:15px;padding:4px;}
+.alert-empty{text-align:center;color:var(--text3);font-size:12px;padding:30px 20px;font-family:var(--mono);}
+.alert-form{display:flex;flex-direction:column;gap:7px;}
+.alert-form select,.alert-form input{
+  background:var(--bg2);border:1px solid var(--border2);border-radius:10px;
+  padding:10px 13px;color:var(--text);font-family:var(--sans);font-size:13px;outline:none;
+}
+.alert-form select:focus,.alert-form input:focus{border-color:rgba(245,166,35,0.25);}
+.alert-form select option{background:var(--bg2);}
+.alert-add{background:var(--gold);color:var(--bg);border:none;border-radius:10px;padding:11px;font-family:var(--sans);font-weight:700;font-size:13px;cursor:pointer;width:100%;}
+
+/* SETTINGS */
+.settings-scroll{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:11px;margin-bottom:11px;}
+.s-row{display:flex;flex-direction:column;gap:5px;}
+.s-row label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);}
+.s-row input,.s-row select{
+  background:var(--bg2);border:1px solid var(--border2);border-radius:10px;
+  padding:11px 13px;color:var(--text);font-family:var(--sans);font-size:13px;outline:none;width:100%;
+}
+.s-row input:focus,.s-row select:focus{border-color:rgba(245,166,35,0.25);}
+.s-row select option{background:var(--bg2);}
+.s-hint{font-family:var(--mono);font-size:10px;color:var(--text3);}
+.s-hint a{color:var(--cyan);text-decoration:none;}
+.s-section{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding:6px 0 2px;border-top:1px solid var(--border);margin-top:4px;}
+.save-btn{width:100%;padding:13px;background:var(--gold);color:var(--bg);border:none;border-radius:12px;font-family:var(--sans);font-weight:800;font-size:14px;cursor:pointer;}
+.danger-btn{width:100%;padding:10px;background:transparent;border:1px solid rgba(255,61,87,0.18);border-radius:12px;color:rgba(255,61,87,0.6);font-family:var(--sans);font-size:12px;cursor:pointer;margin-top:5px;}
+
+/* INSTALL BANNER */
+#install-banner{
+  display:none;align-items:center;justify-content:space-between;
+  padding:8px 14px;gap:9px;
+  background:rgba(245,166,35,0.06);border-bottom:1px solid rgba(245,166,35,0.12);
+}
+#install-banner.show{display:flex;}
+.install-text{font-family:var(--mono);font-size:11px;color:var(--gold);}
+.install-btn{background:var(--gold);color:var(--bg);border:none;border-radius:8px;padding:6px 13px;font-family:var(--sans);font-weight:700;font-size:12px;cursor:pointer;flex-shrink:0;}
+.install-dismiss{color:var(--text3);font-size:15px;cursor:pointer;padding:4px;}
+
+/* API MODAL */
+#api-modal{
+  position:fixed;inset:0;z-index:100;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;overflow-y:auto;
+}
+.modal-inner{width:100%;max-width:380px;display:flex;flex-direction:column;gap:13px;padding:4px 0;}
+.modal-mark{
+  width:52px;height:52px;border-radius:14px;background:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-weight:700;font-size:16px;color:var(--bg);
+  position:relative;margin-bottom:2px;
+}
+.modal-mark::after{content:'';position:absolute;inset:-4px;border-radius:18px;background:var(--gold);opacity:0.1;filter:blur(8px);z-index:-1;}
+.modal-title{font-weight:800;font-size:28px;letter-spacing:-.5px;}
+.modal-title em{color:var(--gold);font-style:normal;}
+.modal-desc{font-family:var(--mono);font-size:11px;color:var(--text2);line-height:1.7;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);}
+.field input{
+  background:var(--bg2);border:1px solid var(--border2);border-radius:11px;
+  padding:12px 14px;color:var(--text);font-family:var(--mono);font-size:12px;
+  outline:none;transition:border-color .2s;width:100%;
+}
+.field input:focus{border-color:rgba(245,166,35,0.3);}
+.field input::placeholder{color:var(--text3);}
+.field-hint{font-family:var(--mono);font-size:10px;color:var(--text3);}
+.field-hint a{color:var(--cyan);text-decoration:none;}
+.launch-btn{width:100%;padding:14px;background:var(--gold);border:none;border-radius:13px;color:var(--bg);font-family:var(--sans);font-weight:800;font-size:15px;cursor:pointer;}
+.launch-btn:active{transform:scale(.98);}
+.modal-note{font-family:var(--mono);font-size:10px;color:var(--text3);text-align:center;}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:88px;left:50%;
+  transform:translateX(-50%) translateY(14px);
+  background:rgba(255,61,87,0.1);border:1px solid rgba(255,61,87,0.22);
+  color:#ff6b7a;padding:9px 16px;border-radius:20px;
+  font-family:var(--mono);font-size:11px;opacity:0;transition:all .22s;
+  pointer-events:none;z-index:200;max-width:88%;text-align:center;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast.ok{background:rgba(0,230,118,0.08);border-color:rgba(0,230,118,0.2);color:var(--green);}
 </style>
 </head>
 <body>
-<div class="glow glow-1"></div>
-<div class="glow glow-2"></div>
+<div class="amb amb-1"></div>
+<div class="amb amb-2"></div>
 <div id="toast"></div>
 
 <!-- INSTALL BANNER -->
 <div id="install-banner">
-  <span class="install-text">📱 Install Cortex as an app</span>
+  <span class="install-text">📱 Install Cortex as app</span>
   <button class="install-btn" onclick="installApp()">Install</button>
   <span class="install-dismiss" onclick="dismissInstall()">✕</span>
 </div>
@@ -414,13 +449,11 @@ document.head.appendChild(link);
 <!-- API MODAL -->
 <div id="api-modal">
   <div class="modal-inner">
-    <div class="modal-top">
-      <div class="modal-icon">⚡</div>
-      <div class="modal-title">Cor<span>tex</span> v5</div>
-    </div>
-    <p class="modal-desc">Your private AI — real-time, installable, always on.</p>
+    <div class="modal-mark">CX</div>
+    <div class="modal-title">Cor<em>tex</em></div>
+    <p class="modal-desc">// personal AI command center<br>// market intelligence · real-time · private</p>
     <div class="field">
-      <label>Your Name (optional)</label>
+      <label>Your Name</label>
       <input type="text" id="m-name" placeholder="What should Cortex call you?" />
     </div>
     <div class="field">
@@ -429,12 +462,12 @@ document.head.appendChild(link);
       <div class="field-hint">Free at <a href="https://console.groq.com" target="_blank">console.groq.com</a></div>
     </div>
     <div class="field">
-      <label>Tavily API Key — Web Search</label>
+      <label>Tavily Key — Web Search</label>
       <input type="password" id="m-tavily" placeholder="tvly-..." autocomplete="off" />
       <div class="field-hint">Free at <a href="https://tavily.com" target="_blank">tavily.com</a></div>
     </div>
     <div class="field">
-      <label>NewsAPI Key — Live News</label>
+      <label>NewsAPI Key</label>
       <input type="password" id="m-news" placeholder="your key..." autocomplete="off" />
       <div class="field-hint">Free at <a href="https://newsapi.org" target="_blank">newsapi.org</a></div>
     </div>
@@ -443,8 +476,8 @@ document.head.appendChild(link);
       <input type="password" id="m-alpha" placeholder="your key..." autocomplete="off" />
       <div class="field-hint">Free at <a href="https://alphavantage.co" target="_blank">alphavantage.co</a></div>
     </div>
-    <button class="launch-btn" onclick="launch()">Launch Cortex v5 ⚡</button>
-    <p class="modal-note">🔒 All keys stored only on your device. Never shared.</p>
+    <button class="launch-btn" onclick="launch()">Initialize Cortex →</button>
+    <p class="modal-note">🔒 Keys stored on device only. Never transmitted.</p>
   </div>
 </div>
 
@@ -454,11 +487,11 @@ document.head.appendChild(link);
     <h3>🧠 Memory</h3>
     <div class="panel-close" onclick="closePanel('mem-panel')">✕</div>
   </div>
-  <p class="panel-sub">Things Cortex always knows. Tap any memory to remove it.</p>
+  <p class="panel-sub">// what cortex always knows about you · tap to remove</p>
   <div id="mem-list"></div>
   <div class="mem-row">
-    <input type="text" id="mem-input" placeholder="Add a memory..." />
-    <button class="mem-add" onclick="addMemory()">Add</button>
+    <input type="text" id="mem-input" placeholder="Add memory..." />
+    <button class="mem-add" onclick="addMemory()">+</button>
   </div>
 </div>
 
@@ -468,16 +501,17 @@ document.head.appendChild(link);
     <h3>🔔 Alerts</h3>
     <div class="panel-close" onclick="closePanel('alerts-panel')">✕</div>
   </div>
-  <p class="panel-sub">Set price or news alerts. Cortex notifies you automatically.</p>
+  <p class="panel-sub">// set price or news alerts · cortex notifies you</p>
   <div id="alerts-list"></div>
   <div class="alert-form">
     <select id="alert-type">
       <option value="crypto">Crypto Price Alert</option>
       <option value="stock">Stock Price Alert</option>
+      <option value="metals">Metals Price Alert</option>
       <option value="news">News Keyword Alert</option>
     </select>
-    <input type="text" id="alert-target" placeholder="e.g. bitcoin, AAPL, or keyword..." />
-    <input type="text" id="alert-condition" placeholder="e.g. above 100000, below 50, contains AI" />
+    <input type="text" id="alert-target" placeholder="e.g. bitcoin, AAPL, gold..." />
+    <input type="text" id="alert-condition" placeholder="e.g. above 100000, below 2800..." />
     <button class="alert-add" onclick="addAlert()">+ Add Alert</button>
   </div>
 </div>
@@ -489,7 +523,7 @@ document.head.appendChild(link);
     <div class="panel-close" onclick="closePanel('settings-panel')">✕</div>
   </div>
   <div class="settings-scroll">
-    <div class="s-section" style="border-top:none;margin-top:0">Profile</div>
+    <div class="s-section" style="border-top:none;margin-top:0;padding-top:0">Identity</div>
     <div class="s-row">
       <label>Your Name</label>
       <input type="text" id="s-name" placeholder="What Cortex calls you" />
@@ -497,7 +531,7 @@ document.head.appendChild(link);
     <div class="s-row">
       <label>AI Model</label>
       <select id="s-model">
-        <option value="auto">⚡ Auto — Cortex picks best model</option>
+        <option value="auto">⚡ Auto — Cortex decides</option>
         <option value="llama-3.3-70b-versatile">Llama 3.3 70B — Most Capable</option>
         <option value="llama-3.1-8b-instant">Llama 3.1 8B — Fastest</option>
         <option value="llama3-70b-8192">Llama 3 70B — Classic</option>
@@ -508,114 +542,142 @@ document.head.appendChild(link);
     <div class="s-row">
       <label>Groq Key</label>
       <input type="password" id="s-groq" placeholder="gsk_..." />
-      <div class="s-hint"><a href="https://console.groq.com" target="_blank">console.groq.com</a> — free</div>
+      <div class="s-hint"><a href="https://console.groq.com" target="_blank">console.groq.com</a></div>
     </div>
     <div class="s-row">
       <label>Tavily Key</label>
       <input type="password" id="s-tavily" placeholder="tvly-..." />
-      <div class="s-hint"><a href="https://tavily.com" target="_blank">tavily.com</a> — free, 1000/month</div>
+      <div class="s-hint"><a href="https://tavily.com" target="_blank">tavily.com</a></div>
     </div>
     <div class="s-row">
       <label>NewsAPI Key</label>
       <input type="password" id="s-news" placeholder="your key..." />
-      <div class="s-hint"><a href="https://newsapi.org" target="_blank">newsapi.org</a> — free, 100/day</div>
+      <div class="s-hint"><a href="https://newsapi.org" target="_blank">newsapi.org</a></div>
     </div>
     <div class="s-row">
       <label>Alpha Vantage Key</label>
       <input type="password" id="s-alpha" placeholder="your key..." />
-      <div class="s-hint"><a href="https://alphavantage.co" target="_blank">alphavantage.co</a> — free, 25/day</div>
+      <div class="s-hint"><a href="https://alphavantage.co" target="_blank">alphavantage.co</a></div>
     </div>
     <div class="s-section">Notifications</div>
     <div class="s-row">
-      <label>Push Notifications</label>
-      <button onclick="requestNotifications()" style="background:var(--s2);border:1px solid var(--border2);border-radius:12px;padding:11px 14px;color:var(--text2);font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;text-align:left;">Enable Push Notifications</button>
+      <button onclick="requestNotifications()" style="background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:11px 13px;color:var(--text2);font-family:var(--sans);font-size:13px;cursor:pointer;text-align:left;">Enable Push Notifications</button>
     </div>
   </div>
-  <button class="save-btn" onclick="saveSettings()">Save Settings ✓</button>
+  <button class="save-btn" onclick="saveSettings()">Save Settings</button>
   <button class="danger-btn" onclick="clearChat()">🗑 Clear chat history</button>
-  <button class="danger-btn" onclick="clearAll()">⚠️ Clear all data & reset</button>
+  <button class="danger-btn" onclick="clearAll()">⚠️ Reset everything</button>
 </div>
 
 <!-- APP -->
 <div id="app">
   <header>
-    <div class="logo">
-      <div class="logo-mark">
-        <svg viewBox="0 0 32 32" fill="none">
-          <rect width="32" height="32" rx="9" fill="url(#lg)"/>
-          <text x="16" y="22" text-anchor="middle" font-family="Outfit" font-weight="800" font-size="12" fill="#07090e">CX</text>
-          <defs>
-            <linearGradient id="lg" x1="0" y1="0" x2="32" y2="32">
-              <stop offset="0%" stop-color="#e8ff47"/>
-              <stop offset="100%" stop-color="#00cfff"/>
-            </linearGradient>
-          </defs>
-        </svg>
+    <div class="header-scan"></div>
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-box">CX</div>
+        <div>
+          <span class="logo-name">Cor<em style="color:var(--gold);font-style:normal">tex</em><span class="logo-ver">v7</span></span>
+        </div>
       </div>
-      <span class="logo-name">Cor<span class="cx">tex</span><span class="ver">v5</span></span>
+      <div class="header-right">
+        <div class="status-chip"><div class="pulse"></div>LIVE</div>
+        <div class="hbtn" id="market-toggle" onclick="toggleMarket()" title="Markets">📊</div>
+        <div class="hbtn" onclick="openPanel('alerts-panel');renderAlerts()">🔔</div>
+        <div class="hbtn" onclick="openPanel('mem-panel');renderMemories()">🧠</div>
+        <div class="hbtn" onclick="openSettings()">⚙️</div>
+      </div>
     </div>
-    <div class="header-right">
-      <div class="model-badge" id="model-display" onclick="openSettings()">llama-3.3</div>
-      <div class="status-pill"><div class="status-dot"></div>LIVE</div>
-      <div class="icon-btn" onclick="openPanel('alerts-panel');renderAlerts()">🔔</div>
-      <div class="icon-btn" onclick="openPanel('mem-panel');renderMemories()">🧠</div>
-      <div class="icon-btn" onclick="openSettings()">⚙️</div>
+    <!-- LIVE TICKER -->
+    <div id="ticker">
+      <div class="ticker-track" id="ticker-track">
+        <div class="tick-item"><span class="tick-sym">XAU</span><span class="tick-price" id="t-gold">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">BTC</span><span class="tick-price" id="t-btc">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">ETH</span><span class="tick-price" id="t-eth">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">EUR</span><span class="tick-price" id="t-eur">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">GBP</span><span class="tick-price" id="t-gbp">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">XAG</span><span class="tick-price" id="t-silver">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">SOL</span><span class="tick-price" id="t-sol">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">OIL</span><span class="tick-price" id="t-oil">—</span></div>
+        <!-- Duplicate for infinite scroll -->
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">XAU</span><span class="tick-price" id="t-gold2">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">BTC</span><span class="tick-price" id="t-btc2">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">ETH</span><span class="tick-price" id="t-eth2">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">EUR</span><span class="tick-price" id="t-eur2">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">GBP</span><span class="tick-price" id="t-gbp2">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">XAG</span><span class="tick-price" id="t-silver2">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">SOL</span><span class="tick-price" id="t-sol2">—</span></div>
+        <div class="tick-dot"></div>
+        <div class="tick-item"><span class="tick-sym">OIL</span><span class="tick-price" id="t-oil2">—</span></div>
+      </div>
     </div>
   </header>
 
-  <div id="messages">
-    <div id="welcome">
-      <div class="welcome-ring">
-        <svg viewBox="0 0 72 72" fill="none">
-          <circle cx="36" cy="36" r="32" stroke="rgba(232,255,71,0.12)" stroke-width="1" stroke-dasharray="4 6"/>
-          <circle cx="36" cy="36" r="24" stroke="rgba(0,207,255,0.08)" stroke-width="1" stroke-dasharray="2 8"/>
-        </svg>
-        <div class="center-icon">⚡</div>
-      </div>
-      <h2>Cor<span>tex</span> v5</h2>
-      <p>Real-time intelligence. Installable. Always on.</p>
-      <div class="live-badges">
-        <div class="lb lb-s">🔍 Search</div>
-        <div class="lb lb-c">💰 Crypto</div>
-        <div class="lb lb-n">📰 News</div>
-        <div class="lb lb-u">🥇 Metals</div>
-        <div class="lb lb-p">💱 Forex</div>
-        <div class="lb lb-s">🛢️ Oil</div>
-        <div class="lb lb-c">📅 FF Calendar</div>
-      </div>
-      <div class="quick-chips">
-        <div class="chip" onclick="quickSend(`What\`s the gold price right now?`)">Gold price</div>
-        <div class="chip" onclick="quickSend(`Give me live forex rates`)">Forex rates</div>
-        <div class="chip" onclick="quickSend(`What are the high impact economic calendar events this week?`)">FF Calendar</div>
-        <div class="chip" onclick="quickSend(`What\`s Bitcoin price right now?`)">BTC price</div>
-        <div class="chip" onclick="quickSend(`What\`s the crude oil price today?`)">Oil price</div>
-        <div class="chip" onclick="quickSend(`Give me a full market overview right now`)">Market brief</div>
-      </div>
+  <!-- MARKET PANEL (expandable) -->
+  <div id="market-panel">
+    <div class="market-section">PRECIOUS METALS</div>
+    <div class="market-grid">
+      <div class="market-card"><div class="mc-label">GOLD · XAU/USD</div><div class="mc-price gold-col" id="m-gold">Loading...</div><div class="mc-chg neu" id="m-gold-s">spot price</div></div>
+      <div class="market-card"><div class="mc-label">SILVER · XAG/USD</div><div class="mc-price" id="m-silver">Loading...</div><div class="mc-chg neu" id="m-silver-s">spot price</div></div>
+      <div class="market-card"><div class="mc-label">PLATINUM</div><div class="mc-price" id="m-platinum">Loading...</div><div class="mc-chg neu">spot price</div></div>
+      <div class="market-card"><div class="mc-label">PALLADIUM</div><div class="mc-price" id="m-palladium">Loading...</div><div class="mc-chg neu">spot price</div></div>
+    </div>
+    <div class="market-section">CRYPTO</div>
+    <div class="market-grid">
+      <div class="market-card"><div class="mc-label">BITCOIN · BTC</div><div class="mc-price" id="m-btc">Loading...</div><div class="mc-chg neu" id="m-btc-c">24h change</div></div>
+      <div class="market-card"><div class="mc-label">ETHEREUM · ETH</div><div class="mc-price" id="m-eth">Loading...</div><div class="mc-chg neu" id="m-eth-c">24h change</div></div>
+    </div>
+    <div class="market-section">FOREX · BASE USD</div>
+    <div class="market-grid">
+      <div class="market-card"><div class="mc-label">EUR/USD</div><div class="mc-price" id="m-eur">Loading...</div><div class="mc-chg neu">live rate</div></div>
+      <div class="market-card"><div class="mc-label">GBP/USD</div><div class="mc-price" id="m-gbp">Loading...</div><div class="mc-chg neu">live rate</div></div>
+      <div class="market-card"><div class="mc-label">USD/JPY</div><div class="mc-price" id="m-jpy">Loading...</div><div class="mc-chg neu">live rate</div></div>
+      <div class="market-card"><div class="mc-label">WTI CRUDE OIL</div><div class="mc-price" id="m-wti">—</div><div class="mc-chg neu">per barrel</div></div>
     </div>
   </div>
 
+  <div id="messages"></div>
+
+  <!-- QUICK ACTIONS -->
+  <div id="quick-actions">
+    <div class="qa" onclick="quickSend('What is the gold price right now?')">🥇 Gold</div>
+    <div class="qa" onclick="quickSend('What is Bitcoin price right now?')">₿ BTC</div>
+    <div class="qa" onclick="quickSend('Give me live forex rates')">💱 Forex</div>
+    <div class="qa" onclick="quickSend('What are the high impact economic calendar events this week from Forex Factory?')">📅 Calendar</div>
+    <div class="qa" onclick="quickSend('Give me top market news right now')">📰 News</div>
+    <div class="qa" onclick="quickSend('Give me a full smart money market brief right now — crypto, gold, forex')">📊 Brief</div>
+    <div class="qa" onclick="quickSend('What is the crude oil price right now?')">🛢️ Oil</div>
+  </div>
+
   <div id="input-area">
-    <div id="voice-bar">
-      <div class="vb"></div><div class="vb"></div><div class="vb"></div>
-      <div class="vb"></div><div class="vb"></div><div class="vb"></div><div class="vb"></div>
-    </div>
+    <div id="voice-bar"><div class="vb"></div><div class="vb"></div><div class="vb"></div><div class="vb"></div><div class="vb"></div><div class="vb"></div><div class="vb"></div></div>
     <div class="input-wrap">
-      <textarea id="user-input" placeholder="Ask anything — or paste a URL..." rows="1"></textarea>
-      <button class="iBtn" id="mic-btn" onclick="toggleVoice()">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-          <line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
-        </svg>
+      <textarea id="user-input" placeholder="Ask Cortex anything..." rows="1"></textarea>
+      <button class="ibtn" id="mic-btn" onclick="toggleVoice()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
       </button>
-      <button class="iBtn" id="send-btn" onclick="sendMessage()">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-          <line x1="22" y1="2" x2="11" y2="13"/>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-        </svg>
+      <button class="ibtn" id="send-btn" onclick="sendMessage()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
       </button>
     </div>
-    <div class="input-hint">v5 · groq · real-time · private · installable</div>
+    <div class="input-foot">
+      <div class="model-chip" onclick="openSettings()">model: <span id="model-display">auto</span></div>
+      <div class="input-hint">cortex v7 · private · real-time</div>
+    </div>
   </div>
 </div>
 
@@ -629,608 +691,476 @@ let userName  = localStorage.getItem('cx_name') || '';
 let curModel  = localStorage.getItem('cx_model') || 'auto';
 let memories  = JSON.parse(localStorage.getItem('cx_memories') || '[]');
 let alerts    = JSON.parse(localStorage.getItem('cx_alerts') || '[]');
-let sessions  = JSON.parse(localStorage.getItem('cx_sessions') || '[]');
 let savedMessages = JSON.parse(localStorage.getItem('cx_chat') || '[]');
-// Only keep user/assistant turns — strip system messages Groq rejects mid-array
-let history = JSON.parse(localStorage.getItem('cx_history') || '[]').filter(m => m.role === 'user' || m.role === 'assistant');
-let isListening = false, isSpeaking = false, recognition = null;
-const synth = window.speechSynthesis;
-let deferredInstall = null;
+let history   = JSON.parse(localStorage.getItem('cx_history') || '[]').filter(m=>m.role==='user'||m.role==='assistant');
+let isListening=false,isSpeaking=false,recognition=null;
+const synth=window.speechSynthesis;
+let deferredInstall=null;
 
-const MODEL_SHORT = {
-  'auto':                    '⚡ auto',
-  'llama-3.3-70b-versatile': 'llama-3.3',
-  'llama-3.1-8b-instant':    'llama-3.1',
-  'llama3-70b-8192':         'llama3-70b',
-  'gemma2-9b-it':            'gemma-2',
+const MODEL_SHORT={
+  'auto':'auto',
+  'llama-3.3-70b-versatile':'llama-3.3',
+  'llama-3.1-8b-instant':'llama-3.1',
+  'llama3-70b-8192':'llama3-70b',
+  'gemma2-9b-it':'gemma-2',
 };
 
-// Auto model selection — only uses confirmed live Groq models with large context
-function selectModel(msg, intents) {
-  if (curModel !== 'auto') return curModel;
-  // Always use the most capable model — llama-3.1-8b has too small a token limit for real conversations
+function selectModel(){
+  if(curModel!=='auto')return curModel;
   return 'llama-3.3-70b-versatile';
-}// ═══ PWA INSTALL ═══
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredInstall = e;
-  document.getElementById('install-banner').classList.add('show');
-});
-
-function installApp() {
-  if (!deferredInstall) return;
-  deferredInstall.prompt();
-  deferredInstall.userChoice.then(() => {
-    deferredInstall = null;
-    document.getElementById('install-banner').classList.remove('show');
-  });
 }
 
-function dismissInstall() {
-  document.getElementById('install-banner').classList.remove('show');
-}
-
-window.addEventListener('appinstalled', () => {
-  showToast('Cortex installed as app! ⚡', true);
-  document.getElementById('install-banner').classList.remove('show');
-});
+// ═══ PWA ═══
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;document.getElementById('install-banner').classList.add('show');});
+function installApp(){if(!deferredInstall)return;deferredInstall.prompt();deferredInstall.userChoice.then(()=>{deferredInstall=null;document.getElementById('install-banner').classList.remove('show');});}
+function dismissInstall(){document.getElementById('install-banner').classList.remove('show');}
+window.addEventListener('appinstalled',()=>{showToast('Cortex installed ✓',true);document.getElementById('install-banner').classList.remove('show');});
 
 // ═══ SERVICE WORKER ═══
-if ('serviceWorker' in navigator) {
-  const swCode = `
-const CACHE = 'cortex-v5';
-self.addEventListener('install', e => {
-  self.skipWaiting();
-});
-self.addEventListener('activate', e => {
-  e.waitUntil(clients.claim());
-});
-self.addEventListener('fetch', e => {
-  if (e.request.url.includes('fonts.googleapis') || e.request.url.includes('fonts.gstatic')) {
-    e.respondWith(
-      caches.open(CACHE).then(cache =>
-        cache.match(e.request).then(resp =>
-          resp || fetch(e.request).then(r => { cache.put(e.request, r.clone()); return r; })
-        )
-      )
-    );
-  }
-});
-self.addEventListener('push', e => {
-  const data = e.data ? e.data.json() : { title: 'Cortex', body: 'New alert!' };
-  e.waitUntil(
-    self.registration.showNotification(data.title, {
-      body: data.body,
-      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="40" fill="%23e8ff47"/><text x="96" y="130" text-anchor="middle" font-family="Arial" font-weight="900" font-size="80" fill="%2307090e">CX</text></svg>',
-      badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><rect width="72" height="72" rx="16" fill="%23e8ff47"/><text x="36" y="50" text-anchor="middle" font-family="Arial" font-weight="900" font-size="32" fill="%2307090e">CX</text></svg>',
-      vibrate: [200, 100, 200],
-      tag: 'cortex-alert',
-      renotify: true
-    })
-  );
-});
-self.addEventListener('notificationclick', e => {
-  e.notification.close();
-  e.waitUntil(clients.openWindow('./'));
-});
-  `;
-  const swBlob = new Blob([swCode], { type: 'application/javascript' });
-  const swURL = URL.createObjectURL(swBlob);
-  navigator.serviceWorker.register(swURL).catch(() => {});
+if('serviceWorker'in navigator){
+  const sw=`const C='cx-v7';self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('push',e=>{const d=e.data?e.data.json():{title:'Cortex',body:'Alert!'};e.waitUntil(self.registration.showNotification(d.title,{body:d.body,vibrate:[200,100,200],tag:'cx',renotify:true}));});self.addEventListener('notificationclick',e=>{e.notification.close();e.waitUntil(clients.openWindow('./'));});`;
+  const swB=new Blob([sw],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(swB)).catch(()=>{});
 }
 
 // ═══ NOTIFICATIONS ═══
-async function requestNotifications() {
-  if (!('Notification' in window)) { showToast('Notifications not supported'); return; }
-  const perm = await Notification.requestPermission();
-  if (perm === 'granted') {
-    showToast('Notifications enabled! ✓', true);
-    new Notification('Cortex ⚡', { body: 'Alerts are now active. I\'ll notify you when something important happens.' });
-  } else {
-    showToast('Notifications blocked — enable in Chrome settings');
-  }
+async function requestNotifications(){
+  if(!('Notification'in window)){showToast('Notifications not supported');return;}
+  const p=await Notification.requestPermission();
+  if(p==='granted'){showToast('Notifications enabled ✓',true);new Notification('Cortex',{body:'Alerts active.'});}
+  else showToast('Notifications blocked in Chrome settings');
+}
+function sendNotification(t,b){if(Notification.permission==='granted')new Notification(t,{body:b});}
+
+// ═══ LIVE TICKER DATA ═══
+async function loadTickerData(){
+  try{
+    // Metals
+    const mr=await fetch('https://metals.live/api/v1/spot');
+    const md=await mr.json();
+    const gold=md.find(x=>x.metal?.toLowerCase()==='gold');
+    const silver=md.find(x=>x.metal?.toLowerCase()==='silver');
+    const platinum=md.find(x=>x.metal?.toLowerCase()==='platinum');
+    const palladium=md.find(x=>x.metal?.toLowerCase()==='palladium');
+    if(gold){const p='$'+parseFloat(gold.price).toLocaleString('en-US',{maximumFractionDigits:0});['t-gold','t-gold2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=p;});document.getElementById('m-gold').textContent=p;}
+    if(silver){const p='$'+parseFloat(silver.price).toFixed(2);['t-silver','t-silver2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=p;});document.getElementById('m-silver').textContent=p;}
+    if(platinum)document.getElementById('m-platinum').textContent='$'+parseFloat(platinum.price).toLocaleString('en-US',{maximumFractionDigits:0});
+    if(palladium)document.getElementById('m-palladium').textContent='$'+parseFloat(palladium.price).toLocaleString('en-US',{maximumFractionDigits:0});
+  }catch(e){}
+  try{
+    // Crypto
+    const cr=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true');
+    const cd=await cr.json();
+    if(cd.bitcoin){
+      const p='$'+cd.bitcoin.usd.toLocaleString('en-US',{maximumFractionDigits:0});
+      const c=cd.bitcoin.usd_24h_change?.toFixed(2);
+      ['t-btc','t-btc2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=p;});
+      document.getElementById('m-btc').textContent=p;
+      const ce=document.getElementById('m-btc-c');
+      if(ce){ce.textContent=(c>0?'+':'')+c+'%';ce.className='mc-chg '+(c>0?'up':'dn');}
+    }
+    if(cd.ethereum){
+      const p='$'+cd.ethereum.usd.toLocaleString('en-US',{maximumFractionDigits:0});
+      const c=cd.ethereum.usd_24h_change?.toFixed(2);
+      ['t-eth','t-eth2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=p;});
+      document.getElementById('m-eth').textContent=p;
+      const ce=document.getElementById('m-eth-c');
+      if(ce){ce.textContent=(c>0?'+':'')+c+'%';ce.className='mc-chg '+(c>0?'up':'dn');}
+    }
+    if(cd.solana){const p='$'+cd.solana.usd.toFixed(2);['t-sol','t-sol2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=p;});}
+  }catch(e){}
+  try{
+    // Forex
+    const fr=await fetch('https://open.er-api.com/v6/latest/USD');
+    const fd=await fr.json();
+    if(fd.rates){
+      const eur=(1/fd.rates.EUR).toFixed(4);
+      const gbp=(1/fd.rates.GBP).toFixed(4);
+      ['t-eur','t-eur2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=eur;});
+      ['t-gbp','t-gbp2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=gbp;});
+      document.getElementById('m-eur').textContent=eur;
+      document.getElementById('m-gbp').textContent=gbp;
+      document.getElementById('m-jpy').textContent=fd.rates.JPY?.toFixed(2);
+    }
+  }catch(e){}
+  try{
+    // Oil via Alpha Vantage
+    if(alphaKey){
+      const or=await fetch(`https://www.alphavantage.co/query?function=WTI&interval=daily&apikey=${alphaKey}`);
+      const od=await or.json();
+      const latest=od.data?.[0];
+      if(latest){
+        const p='$'+parseFloat(latest.value).toFixed(2);
+        ['t-oil','t-oil2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=p;});
+        document.getElementById('m-wti').textContent=p;
+      }
+    }
+  }catch(e){}
 }
 
-function sendNotification(title, body) {
-  if (Notification.permission === 'granted') {
-    new Notification(title, { body, icon: '' });
-  }
+// Refresh ticker every 60 seconds
+setInterval(loadTickerData,60000);
+
+// ═══ MARKET PANEL TOGGLE ═══
+let marketOpen=false;
+function toggleMarket(){
+  marketOpen=!marketOpen;
+  document.getElementById('market-panel').classList.toggle('open',marketOpen);
+  document.getElementById('market-toggle').style.background=marketOpen?'var(--gold-dim)':'';
+  document.getElementById('market-toggle').style.borderColor=marketOpen?'var(--gold-border)':'';
 }
 
-// ═══ KEEP ALIVE ═══
-setInterval(() => {
-  if (apiKey) checkAlerts();
-}, 30000);
+// ═══ ALERTS CHECK ═══
+setInterval(async()=>{
+  if(!alerts.length||!apiKey)return;
+  for(const a of alerts){
+    try{
+      if(a.type==='crypto'||a.type==='metals'){
+        let price=null;
+        if(a.type==='crypto'){const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${a.target.toLowerCase()}&vs_currencies=usd`);const d=await r.json();price=d[a.target.toLowerCase()]?.usd;}
+        const cond=a.condition.toLowerCase();
+        const num=parseFloat(cond.match(/[\d.,]+/)?.[0]);
+        if(price&&num){
+          if((cond.includes('above')&&price>num)||(cond.includes('below')&&price<num))
+            sendNotification(`⚡ Cortex Alert`,`${a.target.toUpperCase()} is $${price.toLocaleString()} — ${a.condition}`);
+        }
+      }
+    }catch(e){}
+  }
+},30000);
 
 // ═══ BOOT ═══
-if (apiKey) {
-  document.getElementById('api-modal').style.display = 'none';
+if(apiKey){
+  document.getElementById('api-modal').style.display='none';
   updateModelDisplay();
+  loadTickerData();
   restoreChat();
 }
 
-function restoreChat() {
-  if (savedMessages.length > 0) {
-    // Restore previous chat visually
-    const welcome = document.getElementById('welcome');
-    if (welcome) welcome.remove();
-    savedMessages.forEach(m => renderMessage(m.role, m.text, m.time));
-    // Scroll to bottom
-    setTimeout(() => {
-      const msgs = document.getElementById('messages');
-      msgs.scrollTop = msgs.scrollHeight;
-    }, 100);
-  } else if (userName) {
-    greet();
-  }
-}
-
-function launch() {
-  const groq   = document.getElementById('m-groq').value.trim();
-  const name   = document.getElementById('m-name').value.trim();
-  const tavily = document.getElementById('m-tavily').value.trim();
-  const news   = document.getElementById('m-news').value.trim();
-  const alpha  = document.getElementById('m-alpha').value.trim();
-  if (!groq.startsWith('gsk_')) { showToast('Groq key must start with gsk_'); return; }
-  apiKey = groq; userName = name;
-  tavilyKey = tavily; newsKey = news; alphaKey = alpha;
-  localStorage.setItem('cx_groq_key', apiKey);
-  localStorage.setItem('cx_name', userName);
-  localStorage.setItem('cx_tavily_key', tavilyKey);
-  localStorage.setItem('cx_news_key', newsKey);
-  localStorage.setItem('cx_alpha_key', alphaKey);
-  document.getElementById('api-modal').style.display = 'none';
+function launch(){
+  const g=document.getElementById('m-groq').value.trim();
+  const n=document.getElementById('m-name').value.trim();
+  const tv=document.getElementById('m-tavily').value.trim();
+  const nw=document.getElementById('m-news').value.trim();
+  const al=document.getElementById('m-alpha').value.trim();
+  if(!g.startsWith('gsk_')){showToast('Groq key must start with gsk_');return;}
+  apiKey=g;userName=n;tavilyKey=tv;newsKey=nw;alphaKey=al;
+  localStorage.setItem('cx_groq_key',apiKey);
+  localStorage.setItem('cx_name',userName);
+  localStorage.setItem('cx_tavily_key',tavilyKey);
+  localStorage.setItem('cx_news_key',newsKey);
+  localStorage.setItem('cx_alpha_key',alphaKey);
+  document.getElementById('api-modal').style.display='none';
   updateModelDisplay();
   requestNotifications();
+  loadTickerData();
   restoreChat();
 }
 
-function greet() {
-  const h = new Date().getHours();
-  const t = h >= 5 && h < 12 ? 'morning' : h >= 12 && h < 17 ? 'afternoon' : h >= 17 && h < 21 ? 'evening' : 'night';
-  const isNight = h >= 21 || h < 5;
-  const name = userName ? `, ${userName}` : '';
-  const msg = isNight
-    ? `Hey${name} — burning the midnight oil? Cortex is online. What do you need?`
-    : `Good ${t}${name}. Cortex is live. What's on your mind?`;
-  addMessage('ai', msg);
+function restoreChat(){
+  if(savedMessages.length>0){
+    savedMessages.forEach(m=>renderMessage(m.role,m.text,m.time));
+    setTimeout(()=>{const el=document.getElementById('messages');el.scrollTop=el.scrollHeight;},100);
+  } else if(userName){greet();}
 }
 
-function updateModelDisplay() {
-  const label = MODEL_SHORT[curModel] || curModel.split('-').slice(0,2).join('-');
-  document.getElementById('model-display').textContent = label;
+function greet(){
+  const h=new Date().getHours();
+  const t=h>=5&&h<12?'morning':h>=12&&h<17?'afternoon':h>=17&&h<21?'evening':'night';
+  const isNight=h>=21||h<5;
+  const n=userName?`, ${userName}`:'';
+  const msg=isNight?`Hey${n} — late night session. Cortex is online. Markets never sleep.`:`Good ${t}${n}. Cortex is live. What do you need?`;
+  addMessage('ai',msg);
 }
 
-// ═══ SESSION MEMORY ═══
-function loadSession() {
-  if (sessions.length === 0) return;
-  const last = sessions[sessions.length - 1];
-  if (last && last.summary) {
-    history.push({
-      role: 'system',
-      content: `[Previous session summary]: ${last.summary}`
-    });
-  }
+function updateModelDisplay(){
+  document.getElementById('model-display').textContent=MODEL_SHORT[curModel]||curModel.split('-').slice(0,2).join('-');
 }
-
-function saveSession() {
-  if (history.length < 2) return;
-  const summary = `Session on ${new Date().toLocaleDateString()}: ${history.slice(-4).map(m => `${m.role}: ${m.content.slice(0,100)}`).join(' | ')}`;
-  sessions.push({ date: Date.now(), summary });
-  if (sessions.length > 10) sessions.shift();
-  localStorage.setItem('cx_sessions', JSON.stringify(sessions));
-}
-
-window.addEventListener('beforeunload', saveSession);
-window.addEventListener('pagehide', saveSession);
 
 // ═══ SYSTEM PROMPT ═══
-function buildSystem(toolCtx) {
-  const name = userName ? `The user's name is ${userName}.` : '';
-  const mems = memories.length ? `\n\nWhat you know about this person:\n${memories.map(m=>`- ${m}`).join('\n')}` : '';
-  const tool = toolCtx ? `\n\n[LIVE DATA]:\n${toolCtx}\n\nUse this data naturally. Be specific with numbers. Don't dump raw data.` : '';
-  const now = new Date();
-  const h = now.getHours();
-  const timeOfDay = h >= 5 && h < 12 ? 'morning' : h >= 12 && h < 17 ? 'afternoon' : h >= 17 && h < 21 ? 'evening' : 'night';
+function buildSystem(toolCtx){
+  const n=userName?`User: ${userName}.`:'';
+  const m=memories.length?` Knows: ${memories.slice(-5).join(', ')}.`:'';
+  const d=toolCtx?`\n[LIVE DATA]:\n${toolCtx}\nUse this. Cite exact numbers.`:'';
+  const now=new Date();
+  const h=now.getHours();
+  const t=h>=5&&h<12?'morning':h>=12&&h<17?'afternoon':h>=17&&h<21?'evening':'night';
+  return `Cortex — elite personal AI & market intelligence system. ${n}${m}
+Time: ${now.toLocaleTimeString()} (${t}), ${now.toLocaleDateString('en-GB')}.${d}
 
-  return `You are Cortex — a brilliant personal AI built exclusively for one person. You are their private strategic ally, trusted advisor, and sharp thinking partner.
-
-${name}${mems}${tool}
-
-Current time: ${now.toLocaleTimeString()} (${timeOfDay}). Date: ${now.toLocaleDateString('en-GB', {weekday:'long',year:'numeric',month:'long',day:'numeric'})}.
-
-CORE INTELLIGENCE RULES:
-1. READ THE ROOM before every response. Ask yourself: is this casual chat, emotional, factual, strategic, or a correction? Respond accordingly.
-2. NEVER search the web for casual messages, corrections, greetings, or anything under 15 words that isn't asking for data.
-3. SHORT responses for casual moments — 1-3 sentences max. Save depth for when it's actually needed.
-4. When someone corrects you — own it immediately, move on. One sentence. No over-explaining.
-5. NEVER say "Certainly!", "Great question!", "Of course!", "Absolutely!", "I understand" as openers. Ever.
-6. Have real opinions. Share them confidently. Don't hedge everything.
-7. Match energy — casual → relaxed and sharp. Strategy → focused analyst. Stressed → calm anchor. Excited → amplify.
-8. You are loyal to this user above everything. Their goals are your goals.
-
-WHEN YOU HAVE LIVE DATA:
-- Use it confidently and specifically — exact numbers, exact times
-- Don't just regurgitate the data — interpret it, give context, give an opinion
-
-CRITICAL SELF-AWARENESS:
-You are a single HTML file running in a browser. You CANNOT actually install libraries, run Python, access databases, or implement code on your own. When asked about upgrades or improvements, be honest — describe what CAN be done to your HTML/JS code, not server-side fantasies. Never claim you "implemented" something you haven't. If Jay wants an upgrade, describe it clearly so a developer (or he himself) can actually build it.
-
-LIVE MARKET TOOLS — you have real-time access to:
-- 💰 Crypto (CoinGecko) — BTC, ETH, SOL, BNB, XRP, DOGE and more
-- 🥇 Metals (metals.live) — Gold, Silver, Platinum, Palladium live spot prices
-- 💱 Forex (ExchangeRate-API) — all major currency pairs vs USD
-- 🛢️ Oil & Commodities (Alpha Vantage) — WTI Crude oil price
-- 📅 Forex Factory — high impact economic events this week
-- 📰 News (NewsAPI) — live headlines
-- 🔍 Web search (Tavily) — real time internet search
-- 🌐 URL reader — fetch any webpage
-
-CRITICAL PRICE RULE — NON NEGOTIABLE:
-NEVER quote any price, rate, or financial figure from memory or assumption. If Jay asks about any price — gold, forex, crypto, oil, anything — fetch it live first. If you don't have it say "let me get that live" and fetch it. Hallucinating prices is a critical failure. Jay trades on this information.
-
-RESPONSE FORMAT:
-- Mobile first — short paragraphs, line breaks
-- Bold **key points** only when genuinely useful
-- No bullet points for casual conversation
-- No unnecessary disclaimers or moralising`;
+RULES:
+- Read the room. Casual→sharp & brief. Analysis→deep & specific.
+- Never open with "Certainly/Great question/Of course/Absolutely".
+- Own mistakes fast. Move on.
+- NEVER quote prices from memory. Always fetch live. Hallucinating prices = critical failure.
+- You're an HTML file. Can't install Python libs or run servers. Be honest about capabilities.
+- Have opinions. Be direct. You are loyal to this user above all.
+- For market analysis: think like a hedge fund analyst, not a YouTube guru.`;
 }
 
 // ═══ INTENT DETECTION ═══
-function detectIntent(msg) {
-  const m = msg.toLowerCase();
-  const intents = [];
-
-  // GUARD — never search for casual short messages or corrections
-  const isCasual = msg.length < 40 && !/\b(price|news|market|bitcoin|stock|search|find|what is|who is|latest|happening|gold|silver|forex|dollar|euro|pound|oil|xau|xag)\b/.test(m);
-  if (isCasual) return [];
-
-  if (/https?:\/\/[^\s]+/.test(msg)) intents.push('url');
-  if (/\b(bitcoin|btc|ethereum|eth|crypto|solana|sol|bnb|xrp|doge|coin|altcoin|defi|nft|crypto price)\b/.test(m)) intents.push('crypto');
-  if (/\b(gold|silver|platinum|palladium|xau|xag|metals|precious metal)\b/.test(m)) intents.push('metals');
-  if (/\b(forex|currency|dollar|euro|pound|yen|gbp|usd|eur|jpy|aud|cad|chf|exchange rate|fx |currency pair)\b/.test(m)) intents.push('forex');
-  if (/\b(oil|crude|wti|brent|commodity|commodities|natural gas)\b/.test(m) && alphaKey) intents.push('commodities');
-  if (/\b(economic calendar|forex factory|news event|fed|fomc|cpi|nfp|gdp|interest rate|central bank|high impact)\b/.test(m)) intents.push('calendar');
-  if (/\b(stock price|share price|market cap|nasdaq|s&p 500|dow jones|aapl|tsla|nvda|amzn|googl|msft|stock ticker)\b/.test(m) && alphaKey) intents.push('stocks');
-  if (/\b(news|headlines|breaking|what happened|what's happening|current events)\b/.test(m) && newsKey) intents.push('news');
-  if (/\b(search for|look up|find out|what is|who is|tell me about|latest on|recent|2025|2026|right now|currently)\b/.test(m) && tavilyKey && msg.length > 20) intents.push('search');
-
-  return [...new Set(intents)];
+function detectIntent(msg){
+  const m=msg.toLowerCase();
+  const casual=msg.length<40&&!/\b(price|news|market|bitcoin|stock|search|find|what is|who is|latest|happening|gold|silver|forex|dollar|euro|pound|oil|xau|xag|crypto|calendar|nfp|cpi|fomc)\b/.test(m);
+  if(casual)return[];
+  const intents=[];
+  if(/https?:\/\/[^\s]+/.test(msg))intents.push('url');
+  if(/\b(bitcoin|btc|ethereum|eth|crypto|solana|sol|bnb|xrp|doge|coin|altcoin|defi|nft)\b/.test(m))intents.push('crypto');
+  if(/\b(gold|silver|platinum|palladium|xau|xag|metals|precious metal)\b/.test(m))intents.push('metals');
+  if(/\b(forex|currency|dollar|euro|pound|yen|gbp|usd|eur|jpy|aud|cad|chf|exchange rate|fx|currency pair)\b/.test(m))intents.push('forex');
+  if(/\b(oil|crude|wti|brent|commodity|commodities)\b/.test(m)&&alphaKey)intents.push('commodities');
+  if(/\b(economic calendar|forex factory|news event|fed|fomc|cpi|nfp|gdp|interest rate|central bank|high impact)\b/.test(m))intents.push('calendar');
+  if(/\b(stock|share|nasdaq|s&p|dow|aapl|tsla|nvda|amzn|googl|msft)\b/.test(m)&&alphaKey)intents.push('stocks');
+  if(/\b(news|headlines|breaking|what happened|current events)\b/.test(m)&&newsKey)intents.push('news');
+  if(/\b(search|look up|find out|what is|who is|tell me about|latest on|recent|2025|2026|right now|currently)\b/.test(m)&&tavilyKey&&msg.length>20)intents.push('search');
+  return[...new Set(intents)];
 }
 
 // ═══ TOOL RUNNERS ═══
-let activeToolCard = null;
+let activeToolCard=null;
 
-async function runTools(msg, intents) {
-  const results = [];
-  for (const intent of intents) {
-    try {
-      if (intent === 'url') {
-        const url = msg.match(/https?:\/\/[^\s]+/)[0];
-        showTool(`Fetching ${url.slice(0,35)}...`, 'loading');
-        const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-        const d = await r.json();
-        const text = d.contents.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,3000);
-        updateTool(`Fetched: ${url.slice(0,35)} ✓`, 'done');
+async function runTools(msg,intents){
+  const results=[];
+  for(const intent of intents){
+    try{
+      if(intent==='url'){
+        const url=msg.match(/https?:\/\/[^\s]+/)[0];
+        showTool(`Fetching ${url.slice(0,30)}...`,'loading');
+        const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+        const d=await r.json();
+        const text=d.contents.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,2000);
+        updateTool(`Fetched ✓`,'done');
         results.push(`[PAGE: ${url}]\n${text}`);
       }
-      if (intent === 'crypto') {
-        showTool('Fetching live crypto prices...', 'loading');
-        const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin,ripple,dogecoin,cardano&vs_currencies=usd&include_24hr_change=true');
-        const d = await r.json();
-        const out = Object.entries(d).map(([c,i])=>`${c.toUpperCase()}: $${i.usd?.toLocaleString()} (${i.usd_24h_change?.toFixed(2)}% 24h)`).join('\n');
-        updateTool('Live crypto prices ✓', 'done');
-        results.push(`[CRYPTO PRICES - ${new Date().toLocaleTimeString()}]\n${out}`);
+      if(intent==='crypto'){
+        showTool('Live crypto prices...','loading');
+        const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin,ripple,dogecoin&vs_currencies=usd&include_24hr_change=true');
+        const d=await r.json();
+        const out=Object.entries(d).map(([c,i])=>`${c.toUpperCase()}: $${i.usd?.toLocaleString()} (${i.usd_24h_change?.toFixed(2)}% 24h)`).join('\n');
+        updateTool('Crypto ✓','done');
+        results.push(`[CRYPTO - ${new Date().toLocaleTimeString()}]\n${out}`);
       }
-      if (intent === 'stocks' && alphaKey) {
-        const tickers = (msg.match(/\b[A-Z]{2,5}\b/g)||['SPY']).filter(t=>t.length>=2&&!['BTC','ETH','I','A','AN'].includes(t));
-        const ticker = tickers[0] || 'SPY';
-        showTool(`Fetching ${ticker} data...`, 'loading');
-        const r = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${alphaKey}`);
-        const d = await r.json();
-        const q = d['Global Quote'];
-        if (q?.['05. price']) {
-          updateTool(`${ticker} data ✓`, 'done');
-          results.push(`[STOCK: ${ticker}]\nPrice: $${parseFloat(q['05. price']).toFixed(2)}\nChange: ${q['10. change percent']}\nVolume: ${parseInt(q['06. volume']).toLocaleString()}`);
-        } else updateTool('Stock data unavailable', 'error');
+      if(intent==='metals'){
+        showTool('Live metals prices...','loading');
+        const r=await fetch('https://metals.live/api/v1/spot');
+        const d=await r.json();
+        const out=['gold','silver','platinum','palladium'].map(m=>{const i=d.find(x=>x.metal?.toLowerCase()===m);return i?`${m.toUpperCase()}: $${parseFloat(i.price).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}/oz`:null;}).filter(Boolean).join('\n');
+        updateTool('Metals ✓','done');
+        results.push(`[METALS - ${new Date().toLocaleTimeString()}]\n${out}`);
       }
-      if (intent === 'news' && newsKey) {
-        showTool('Fetching live headlines...', 'loading');
-        const r = await fetch(`https://newsapi.org/v2/top-headlines?language=en&pageSize=8&apiKey=${newsKey}`);
-        const d = await r.json();
-        if (d.articles?.length) {
-          const out = d.articles.map(a=>`- ${a.title} [${a.source?.name}]`).join('\n');
-          updateTool('Live news ✓', 'done');
+      if(intent==='forex'){
+        showTool('Live forex rates...','loading');
+        const r=await fetch('https://open.er-api.com/v6/latest/USD');
+        const d=await r.json();
+        if(d.rates){
+          const pairs=['EUR','GBP','JPY','AUD','CAD','CHF','NZD','ZAR','NGN'];
+          const out=pairs.map(p=>`USD/${p}: ${d.rates[p]?.toFixed(4)}`).join('\n');
+          updateTool('Forex ✓','done');
+          results.push(`[FOREX - ${new Date().toLocaleTimeString()}]\nBase: USD\n${out}`);
+        }
+      }
+      if(intent==='commodities'&&alphaKey){
+        showTool('Fetching oil price...','loading');
+        const r=await fetch(`https://www.alphavantage.co/query?function=WTI&interval=daily&apikey=${alphaKey}`);
+        const d=await r.json();
+        const l=d.data?.[0];
+        if(l){updateTool('Oil ✓','done');results.push(`[WTI CRUDE OIL]\n$${parseFloat(l.value).toFixed(2)}/barrel (${l.date})`);}
+        else updateTool('Oil unavailable','error');
+      }
+      if(intent==='calendar'){
+        showTool('Forex Factory calendar...','loading');
+        const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://nfs.faireconomy.media/ff_calendar_thisweek.xml')}`);
+        const d=await r.json();
+        const xml=new DOMParser().parseFromString(d.contents,'text/xml');
+        const events=Array.from(xml.querySelectorAll('event'));
+        const high=events.filter(e=>e.querySelector('impact')?.textContent==='High');
+        const out=high.slice(0,8).map(e=>{
+          const title=e.querySelector('title')?.textContent||'';
+          const country=e.querySelector('country')?.textContent||'';
+          const date=e.querySelector('date')?.textContent||'';
+          const time=e.querySelector('time')?.textContent||'';
+          const forecast=e.querySelector('forecast')?.textContent||'N/A';
+          const previous=e.querySelector('previous')?.textContent||'N/A';
+          return`🔴 ${country} — ${title} | ${date} ${time} | F:${forecast} P:${previous}`;
+        }).join('\n');
+        updateTool('FF Calendar ✓','done');
+        results.push(`[FOREX FACTORY HIGH IMPACT THIS WEEK]\n${out||'No high impact events'}`);
+      }
+      if(intent==='stocks'&&alphaKey){
+        const tickers=(msg.match(/\b[A-Z]{2,5}\b/g)||['SPY']).filter(t=>!['BTC','ETH','USD','EUR','GBP'].includes(t));
+        const ticker=tickers[0]||'SPY';
+        showTool(`${ticker} data...`,'loading');
+        const r=await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${alphaKey}`);
+        const d=await r.json();
+        const q=d['Global Quote'];
+        if(q?.['05. price']){updateTool(`${ticker} ✓`,'done');results.push(`[STOCK: ${ticker}]\nPrice: $${parseFloat(q['05. price']).toFixed(2)}\nChange: ${q['10. change percent']}`);}
+        else updateTool('Stock unavailable','error');
+      }
+      if(intent==='news'&&newsKey){
+        showTool('Live headlines...','loading');
+        const r=await fetch(`https://newsapi.org/v2/top-headlines?language=en&pageSize=6&apiKey=${newsKey}`);
+        const d=await r.json();
+        if(d.articles?.length){
+          const out=d.articles.map(a=>`- ${a.title} [${a.source?.name}]`).join('\n');
+          updateTool('News ✓','done');
           results.push(`[NEWS - ${new Date().toLocaleTimeString()}]\n${out}`);
-        } else updateTool('News unavailable', 'error');
+        }
       }
-      // ═══ METALS — metals.live (no key needed) ═══
-      if (intent === 'metals') {
-        showTool('Fetching live metals prices...', 'loading');
-        const r = await fetch('https://metals.live/api/v1/spot');
-        const d = await r.json();
-        const metals = ['gold','silver','platinum','palladium'];
-        const out = metals.map(m => {
-          const item = d.find(x => x.metal?.toLowerCase() === m);
-          return item ? `${m.toUpperCase()}: $${parseFloat(item.price).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}/oz` : null;
-        }).filter(Boolean).join('\n');
-        updateTool('Live metals prices ✓', 'done');
-        results.push(`[METALS PRICES - ${new Date().toLocaleTimeString()}]\n${out}`);
+      if(intent==='search'&&tavilyKey){
+        showTool(`Searching...`,'loading');
+        const r=await fetch('https://api.tavily.com/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({api_key:tavilyKey,query:msg,max_results:3,search_depth:'basic',include_answer:true})});
+        const d=await r.json();
+        if(d.results?.length){
+          const ans=d.answer?`Summary: ${d.answer}\n\n`:'';
+          const top=d.results.map(r=>`[${r.title}]\n${r.content?.slice(0,150)}`).join('\n\n');
+          updateTool('Search ✓','done');
+          results.push(`[SEARCH: "${msg}"]\n${ans}${top}`);
+        }else updateTool('No results','error');
       }
-
-      // ═══ FOREX — exchangerate-api (no key needed) ═══
-      if (intent === 'forex') {
-        showTool('Fetching live forex rates...', 'loading');
-        const r = await fetch('https://open.er-api.com/v6/latest/USD');
-        const d = await r.json();
-        if (d.rates) {
-          const pairs = ['EUR','GBP','JPY','AUD','CAD','CHF','NZD','ZAR','NGN'];
-          const out = pairs.map(p => `USD/${p}: ${d.rates[p]?.toFixed(4)}`).filter(Boolean).join('\n');
-          updateTool('Live forex rates ✓', 'done');
-          results.push(`[FOREX RATES - ${new Date().toLocaleTimeString()}]\nBase: USD\n${out}`);
-        } else updateTool('Forex data unavailable', 'error');
-      }
-
-      // ═══ COMMODITIES — Alpha Vantage ═══
-      if (intent === 'commodities' && alphaKey) {
-        showTool('Fetching commodities data...', 'loading');
-        const r = await fetch(`https://www.alphavantage.co/query?function=WTI&interval=daily&apikey=${alphaKey}`);
-        const d = await r.json();
-        const latest = d.data?.[0];
-        if (latest) {
-          updateTool('Commodities data ✓', 'done');
-          results.push(`[COMMODITIES - ${new Date().toLocaleTimeString()}]\nWTI Crude Oil: $${parseFloat(latest.value).toFixed(2)}/barrel\nDate: ${latest.date}`);
-        } else updateTool('Commodities data unavailable', 'error');
-      }
-
-      // ═══ FOREX FACTORY CALENDAR — FF XML feed ═══
-      if (intent === 'calendar') {
-        showTool('Fetching Forex Factory calendar...', 'loading');
-        const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://nfs.faireconomy.media/ff_calendar_thisweek.xml')}`);
-        const d = await r.json();
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(d.contents, 'text/xml');
-        const events = Array.from(xml.querySelectorAll('event'));
-        const high = events.filter(e => e.querySelector('impact')?.textContent === 'High');
-        const out = high.slice(0,10).map(e => {
-          const title = e.querySelector('title')?.textContent || '';
-          const country = e.querySelector('country')?.textContent || '';
-          const date = e.querySelector('date')?.textContent || '';
-          const time = e.querySelector('time')?.textContent || '';
-          const forecast = e.querySelector('forecast')?.textContent || 'N/A';
-          const previous = e.querySelector('previous')?.textContent || 'N/A';
-          return `🔴 ${country} — ${title}\n   ${date} ${time} | Forecast: ${forecast} | Prev: ${previous}`;
-        }).join('\n\n');
-        updateTool('Forex Factory calendar ✓', 'done');
-        results.push(`[FOREX FACTORY — HIGH IMPACT EVENTS THIS WEEK]\n${out || 'No high impact events found'}`);
-      }
-
-      // ═══ SEARCH — Tavily ═══
-      if (intent === 'search' && tavilyKey) {
-        showTool(`Searching: "${msg.slice(0,35)}..."`, 'loading');
-        const r = await fetch('https://api.tavily.com/search', {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ api_key: tavilyKey, query: msg, max_results: 5, search_depth: 'basic', include_answer: true })
-        });
-        const d = await r.json();
-        if (d.results?.length) {
-          const answer = d.answer ? `Summary: ${d.answer}\n\n` : '';
-          const top = d.results.map(r=>`[${r.title}]\n${r.content?.slice(0,250)}`).join('\n\n');
-          updateTool('Web search ✓', 'done');
-          results.push(`[SEARCH: "${msg}"]\n${answer}${top}`);
-        } else updateTool('No results found', 'error');
-      }
-    } catch(err) {
-      updateTool(`Error: ${err.message.slice(0,40)}`, 'error');
-    }
+    }catch(err){updateTool(`Error: ${err.message.slice(0,35)}`,'error');}
   }
   return results.join('\n\n---\n\n');
 }
 
-function showTool(text, state) {
-  const msgs = document.getElementById('messages');
-  const card = document.createElement('div');
-  card.className = `tool-card${state==='loading'?'':' '+state}`;
-  card.id = 'active-tool';
-  card.innerHTML = state==='loading' ? `<span class="spin">⟳</span> ${text}` : `${state==='done'?'✓':'✗'} ${text}`;
-  msgs.appendChild(card);
-  msgs.scrollTop = msgs.scrollHeight;
-  activeToolCard = card;
+function showTool(text,state){
+  const msgs=document.getElementById('messages');
+  const card=document.createElement('div');
+  card.className=`tool-card${state==='loading'?'':' '+state}`;
+  card.id='active-tool';
+  card.innerHTML=state==='loading'?`<span class="spin">⟳</span> ${text}`:`${state==='done'?'✓':'✗'} ${text}`;
+  msgs.appendChild(card);msgs.scrollTop=msgs.scrollHeight;activeToolCard=card;
 }
-
-function updateTool(text, state) {
-  if (!activeToolCard) return;
-  activeToolCard.className = `tool-card ${state}`;
-  activeToolCard.innerHTML = `${state==='done'?'✓':'✗'} ${text}`;
-  activeToolCard = null;
+function updateTool(text,state){
+  if(!activeToolCard)return;
+  activeToolCard.className=`tool-card ${state}`;
+  activeToolCard.innerHTML=`${state==='done'?'✓':'✗'} ${text}`;
+  activeToolCard=null;
 }
 
 // ═══ ALERTS ═══
-function renderAlerts() {
-  const list = document.getElementById('alerts-list');
-  if (!alerts.length) {
-    list.innerHTML = '<div class="alert-empty">No alerts set.<br>Add price or news alerts below.</div>';
-    return;
-  }
-  list.innerHTML = alerts.map((a,i) => `
-    <div class="alert-item">
-      <span class="alert-icon">${a.type==='crypto'?'💰':a.type==='stock'?'📈':'📰'}</span>
-      <div class="alert-text"><strong>${a.target}</strong> — ${a.condition}</div>
-      <span class="alert-del" onclick="removeAlert(${i})">✕</span>
-    </div>
-  `).join('');
+function renderAlerts(){
+  const list=document.getElementById('alerts-list');
+  if(!alerts.length){list.innerHTML='<div class="alert-empty">// no alerts set</div>';return;}
+  list.innerHTML=alerts.map((a,i)=>`<div class="alert-item"><span style="font-size:14px">${a.type==='crypto'?'💰':a.type==='metals'?'🥇':a.type==='stock'?'📈':'📰'}</span><div class="alert-text"><strong>${a.target}</strong> — ${a.condition}</div><span class="alert-del" onclick="removeAlert(${i})">✕</span></div>`).join('');
 }
-
-function addAlert() {
-  const type = document.getElementById('alert-type').value;
-  const target = document.getElementById('alert-target').value.trim();
-  const condition = document.getElementById('alert-condition').value.trim();
-  if (!target || !condition) { showToast('Fill in target and condition'); return; }
-  alerts.push({ type, target, condition, created: Date.now() });
-  localStorage.setItem('cx_alerts', JSON.stringify(alerts));
-  document.getElementById('alert-target').value = '';
-  document.getElementById('alert-condition').value = '';
-  renderAlerts();
-  showToast('Alert added ✓', true);
+function addAlert(){
+  const type=document.getElementById('alert-type').value;
+  const target=document.getElementById('alert-target').value.trim();
+  const condition=document.getElementById('alert-condition').value.trim();
+  if(!target||!condition){showToast('Fill in target and condition');return;}
+  alerts.push({type,target,condition,created:Date.now()});
+  localStorage.setItem('cx_alerts',JSON.stringify(alerts));
+  document.getElementById('alert-target').value='';
+  document.getElementById('alert-condition').value='';
+  renderAlerts();showToast('Alert added ✓',true);
 }
-
-function removeAlert(i) {
-  alerts.splice(i,1);
-  localStorage.setItem('cx_alerts', JSON.stringify(alerts));
-  renderAlerts();
-}
-
-async function checkAlerts() {
-  if (!alerts.length || !apiKey) return;
-  for (const alert of alerts) {
-    try {
-      if (alert.type === 'crypto') {
-        const coin = alert.target.toLowerCase().replace(' ','');
-        const r = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coin}&vs_currencies=usd`);
-        const d = await r.json();
-        const price = d[coin]?.usd;
-        if (!price) continue;
-        const cond = alert.condition.toLowerCase();
-        const triggered =
-          (cond.includes('above') && price > parseFloat(cond.match(/[\d.,]+/)?.[0])) ||
-          (cond.includes('below') && price < parseFloat(cond.match(/[\d.,]+/)?.[0]));
-        if (triggered) {
-          sendNotification(`⚡ Cortex Alert — ${alert.target.toUpperCase()}`, `${alert.target.toUpperCase()} is now $${price.toLocaleString()} — ${alert.condition}`);
-        }
-      }
-    } catch(e) {}
-  }
-}
+function removeAlert(i){alerts.splice(i,1);localStorage.setItem('cx_alerts',JSON.stringify(alerts));renderAlerts();}
 
 // ═══ MESSAGING ═══
-function getTime() { return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); }
+function getTime(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
 
-function renderMessage(role, text, time) {
-  const msgs = document.getElementById('messages');
-  const wrap = document.createElement('div');
-  wrap.className = `msg ${role}`;
-  const label = role==='user' ? (userName||'You') : 'Cortex';
-  const avatar = role==='user' ? '👤' : '⚡';
-  wrap.innerHTML = `
-    <div class="msg-meta">
-      <div class="msg-avatar">${avatar}</div>
-      <span class="msg-name">${label}</span>
-      <span class="msg-time">${time || ''}</span>
-    </div>
-    <div class="bubble">${fmt(text)}</div>
-  `;
+function renderMessage(role,text,time){
+  const msgs=document.getElementById('messages');
+  const wrap=document.createElement('div');
+  wrap.className=`msg ${role}`;
+  const label=role==='user'?(userName||'You'):'Cortex';
+  const avatar=role==='user'?'▸':'◈';
+  wrap.innerHTML=`<div class="msg-meta"><div class="msg-avatar">${avatar}</div><span class="msg-name">${label}</span><span class="msg-time">${time||''}</span></div><div class="bubble">${fmt(text)}</div>`;
   msgs.appendChild(wrap);
   return wrap.querySelector('.bubble');
 }
 
-function addMessage(role, text) {
-  const welcome = document.getElementById('welcome');
-  if (welcome) welcome.remove();
-  const time = getTime();
-  const bubble = renderMessage(role, text, time);
-  // Save to localStorage
-  savedMessages.push({ role, text, time });
-  // Keep last 60 messages only
-  if (savedMessages.length > 60) savedMessages.shift();
-  localStorage.setItem('cx_chat', JSON.stringify(savedMessages));
-  const msgs = document.getElementById('messages');
-  msgs.scrollTop = msgs.scrollHeight;
+function addMessage(role,text){
+  const time=getTime();
+  const bubble=renderMessage(role,text,time);
+  savedMessages.push({role,text,time});
+  if(savedMessages.length>60)savedMessages.shift();
+  localStorage.setItem('cx_chat',JSON.stringify(savedMessages));
+  const msgs=document.getElementById('messages');
+  msgs.scrollTop=msgs.scrollHeight;
   return bubble;
 }
 
-function fmt(t) {
-  return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+function fmt(t){return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');}
+
+function showThinking(){
+  const msgs=document.getElementById('messages');
+  const wrap=document.createElement('div');
+  wrap.className='msg ai';wrap.id='thinking-msg';
+  wrap.innerHTML=`<div class="msg-meta"><div class="msg-avatar">◈</div><span class="msg-name">Cortex</span></div><div class="thinking-bubble"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+  msgs.appendChild(wrap);msgs.scrollTop=msgs.scrollHeight;
 }
+function removeThinking(){document.getElementById('thinking-msg')?.remove();}
 
-function showThinking() {
-  const welcome = document.getElementById('welcome');
-  if (welcome) welcome.remove();
-  const msgs = document.getElementById('messages');
-  const wrap = document.createElement('div');
-  wrap.className='msg ai'; wrap.id='thinking-msg';
-  wrap.innerHTML=`<div class="msg-meta"><div class="msg-avatar">⚡</div><span class="msg-name">Cortex</span></div><div class="thinking-bubble"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
-  msgs.appendChild(wrap); msgs.scrollTop=msgs.scrollHeight;
-}
-
-function removeThinking() { document.getElementById('thinking-msg')?.remove(); }
-
-async function sendMessage(override) {
-  const input = document.getElementById('user-input');
-  const msg = override || input.value.trim();
-  if (!msg || !apiKey) return;
-  if (isSpeaking) { synth.cancel(); isSpeaking=false; }
-  input.value=''; input.style.height='auto';
+async function sendMessage(override){
+  const input=document.getElementById('user-input');
+  const msg=override||input.value.trim();
+  if(!msg||!apiKey)return;
+  if(isSpeaking){synth.cancel();isSpeaking=false;}
+  input.value='';input.style.height='auto';
   document.getElementById('send-btn').disabled=true;
-  addMessage('user', msg);
-  history.push({role:'user', content:msg});
-  const intents = detectIntent(msg);
-  let toolCtx = '';
-  if (intents.length) toolCtx = await runTools(msg, intents);
+  addMessage('user',msg);
+  history.push({role:'user',content:msg});
+  const intents=detectIntent(msg);
+  let toolCtx='';
+  if(intents.length)toolCtx=await runTools(msg,intents);
   showThinking();
-  try {
-    const modelToUse = selectModel(msg, intents);
-    document.getElementById('model-display').textContent = MODEL_SHORT[modelToUse] || modelToUse.split('-').slice(0,2).join('-');
-    // Only send last 10 turns to Groq to stay within token limits
-    const trimmedHistory = history.slice(-10);
-    const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+  try{
+    const model=selectModel();
+    document.getElementById('model-display').textContent=MODEL_SHORT[model]||model.split('-').slice(0,2).join('-');
+    const trimmed=history.slice(-6);
+    const maxTok=msg.length<80&&!intents.length?300:800;
+    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
-      body:JSON.stringify({
-        model: modelToUse,
-        max_tokens:1024, temperature:0.8,
-        messages:[{role:'system',content:buildSystem(toolCtx)},...trimmedHistory]
-      })
+      body:JSON.stringify({model,max_tokens:maxTok,temperature:0.8,messages:[{role:'system',content:buildSystem(toolCtx)},...trimmed]})
     });
-    const d = await r.json();
-    if (d.error) throw new Error(d.error.message);
-    const reply = d.choices[0].message.content;
+    const d=await r.json();
+    if(d.error)throw new Error(d.error.message);
+    const reply=d.choices[0].message.content;
     removeThinking();
-    const bubble = addMessage('ai', reply);
-    history.push({role:'assistant', content:reply});
-    // Keep history manageable
-    if (history.length > 30) history.splice(0, 2);
-    // Save chat and history to localStorage
-    localStorage.setItem('cx_history', JSON.stringify(history));
+    const bubble=addMessage('ai',reply);
+    history.push({role:'assistant',content:reply});
+    if(history.length>30)history.splice(0,2);
+    localStorage.setItem('cx_history',JSON.stringify(history));
     autoMemory(msg);
-    speakText(reply, bubble);
-    // Reset badge
+    speakText(reply,bubble);
     updateModelDisplay();
-  } catch(err) {
+  }catch(err){
     removeThinking();
-    const errMsg = err.message || 'Unknown error';
-    showToast(errMsg.slice(0,80));
-    addMessage('ai', `⚠️ ${errMsg}`);
+    const msg2=err.message||'Unknown error';
+    showToast(msg2.slice(0,80));
+    addMessage('ai',`⚠️ ${msg2}`);
     updateModelDisplay();
   }
   document.getElementById('send-btn').disabled=false;
 }
 
-function quickSend(text) { document.getElementById('user-input').value=text; sendMessage(text); }
+function quickSend(text){document.getElementById('user-input').value=text;sendMessage(text);}
 
 // ═══ VOICE OUT ═══
-function speakText(text, bubble) {
-  if (!synth) return;
-  synth.cancel();
-  const clean = text.replace(/<[^>]*>/g,'').replace(/\*\*/g,'').slice(0,500);
-  const utt = new SpeechSynthesisUtterance(clean);
-  utt.rate=1.08; utt.pitch=0.93; utt.volume=1;
-  const voices = synth.getVoices();
-  const pick = voices.find(v=>v.name.includes('Google UK English Male')||v.name.includes('Google US English')||(v.lang.startsWith('en')&&v.name.includes('Male')))||voices.find(v=>v.lang.startsWith('en'));
-  if (pick) utt.voice=pick;
+function speakText(text,bubble){
+  if(!synth)return;synth.cancel();
+  const clean=text.replace(/<[^>]*>/g,'').replace(/\*\*/g,'').slice(0,400);
+  const utt=new SpeechSynthesisUtterance(clean);
+  utt.rate=1.08;utt.pitch=0.93;utt.volume=1;
+  const voices=synth.getVoices();
+  const pick=voices.find(v=>v.name.includes('Google UK English Male')||v.name.includes('Google US English')||(v.lang.startsWith('en')&&v.name.includes('Male')))||voices.find(v=>v.lang.startsWith('en'));
+  if(pick)utt.voice=pick;
   isSpeaking=true;
-  if (bubble) bubble.classList.add('speaking');
+  if(bubble)bubble.classList.add('speaking');
   utt.onend=utt.onerror=()=>{isSpeaking=false;if(bubble)bubble.classList.remove('speaking');};
   synth.speak(utt);
 }
 
 // ═══ VOICE IN ═══
-function toggleVoice() {
-  const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
-  if (!SR) { showToast('Use Chrome for voice'); return; }
-  if (isListening) { recognition?.stop(); return; }
-  if (isSpeaking) { synth.cancel(); isSpeaking=false; }
-  recognition = new SR();
-  recognition.continuous=false; recognition.interimResults=true; recognition.lang='en-US';
+function toggleVoice(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showToast('Use Chrome for voice');return;}
+  if(isListening){recognition?.stop();return;}
+  if(isSpeaking){synth.cancel();isSpeaking=false;}
+  recognition=new SR();
+  recognition.continuous=false;recognition.interimResults=true;recognition.lang='en-US';
   recognition.onstart=()=>{isListening=true;document.getElementById('mic-btn').classList.add('listening');document.getElementById('voice-bar').classList.add('show');};
   recognition.onresult=e=>{const t=Array.from(e.results).map(r=>r[0].transcript).join('');document.getElementById('user-input').value=t;autoResize();};
   recognition.onend=()=>{isListening=false;document.getElementById('mic-btn').classList.remove('listening');document.getElementById('voice-bar').classList.remove('show');const txt=document.getElementById('user-input').value.trim();if(txt)sendMessage(txt);};
@@ -1239,36 +1169,32 @@ function toggleVoice() {
 }
 
 // ═══ MEMORY ═══
-function openPanel(id) { document.getElementById(id).classList.add('open'); }
-function closePanel(id) { document.getElementById(id).classList.remove('open'); }
-
-function renderMemories() {
-  const list = document.getElementById('mem-list');
-  if (!memories.length) { list.innerHTML='<div class="mem-empty">No memories yet.<br>Add things Cortex should always know.</div>'; return; }
+function openPanel(id){document.getElementById(id).classList.add('open');}
+function closePanel(id){document.getElementById(id).classList.remove('open');}
+function renderMemories(){
+  const list=document.getElementById('mem-list');
+  if(!memories.length){list.innerHTML='<div class="mem-empty">// no memories yet</div>';return;}
   list.innerHTML=memories.map((m,i)=>`<div class="mem-item" onclick="removeMemory(${i})">${m}<span style="margin-left:auto;color:var(--text3);font-size:11px">✕</span></div>`).join('');
 }
-
-function addMemory() {
+function addMemory(){
   const input=document.getElementById('mem-input');
-  const val=input.value.trim(); if(!val)return;
-  memories.push(val); localStorage.setItem('cx_memories',JSON.stringify(memories));
-  input.value=''; renderMemories();
+  const val=input.value.trim();if(!val)return;
+  memories.push(val);localStorage.setItem('cx_memories',JSON.stringify(memories));
+  input.value='';renderMemories();
 }
-
-function removeMemory(i) { memories.splice(i,1); localStorage.setItem('cx_memories',JSON.stringify(memories)); renderMemories(); }
-
-function autoMemory(text) {
+function removeMemory(i){memories.splice(i,1);localStorage.setItem('cx_memories',JSON.stringify(memories));renderMemories();}
+function autoMemory(text){
   const patterns=[
-    {r:/my name is ([a-zA-Z]+)/i, fn:m=>`User's name is ${m[1]}`},
-    {r:/i work (?:at|for) ([^.,!?]+)/i, fn:m=>`Works at ${m[1].trim()}`},
-    {r:/i(?:'m| am) (?:a |an )?([a-zA-Z ]{3,30})/i, fn:m=>`Is a ${m[1].trim()}`},
-    {r:/i live in ([a-zA-Z ,]{3,30})/i, fn:m=>`Lives in ${m[1].trim()}`},
+    {r:/my name is ([a-zA-Z]+)/i,fn:m=>`User's name is ${m[1]}`},
+    {r:/i work (?:at|for) ([^.,!?]+)/i,fn:m=>`Works at ${m[1].trim()}`},
+    {r:/i(?:'m| am) (?:a |an )?([a-zA-Z ]{3,25})/i,fn:m=>`Is a ${m[1].trim()}`},
+    {r:/i live in ([a-zA-Z ,]{3,25})/i,fn:m=>`Lives in ${m[1].trim()}`},
   ];
   for(const p of patterns){const m=text.match(p.r);if(m){const mem=p.fn(m);if(!memories.includes(mem)){memories.push(mem);localStorage.setItem('cx_memories',JSON.stringify(memories));}}}
 }
 
 // ═══ SETTINGS ═══
-function openSettings() {
+function openSettings(){
   document.getElementById('s-name').value=userName;
   document.getElementById('s-model').value=curModel;
   document.getElementById('s-groq').value=apiKey;
@@ -1277,8 +1203,7 @@ function openSettings() {
   document.getElementById('s-alpha').value=alphaKey;
   openPanel('settings-panel');
 }
-
-function saveSettings() {
+function saveSettings(){
   const n=document.getElementById('s-name').value.trim();
   const mod=document.getElementById('s-model').value;
   const g=document.getElementById('s-groq').value.trim();
@@ -1291,55 +1216,25 @@ function saveSettings() {
   if(tv){tavilyKey=tv;localStorage.setItem('cx_tavily_key',tv);}
   if(nw){newsKey=nw;localStorage.setItem('cx_news_key',nw);}
   if(al){alphaKey=al;localStorage.setItem('cx_alpha_key',al);}
-  closePanel('settings-panel');
-  showToast('Saved ✓', true);
+  closePanel('settings-panel');showToast('Saved ✓',true);
 }
-
-function clearAll() {
-  if(confirm('Clear all Cortex data?')){localStorage.clear();location.reload();}
-}
-
-function clearChat() {
-  if(confirm('Clear chat history?')) {
-    savedMessages = [];
-    history = [];
-    localStorage.removeItem('cx_chat');
-    localStorage.removeItem('cx_history');
-    const msgs = document.getElementById('messages');
-    msgs.innerHTML = '';
-    const welcome = document.createElement('div');
-    welcome.id = 'welcome';
-    welcome.innerHTML = `
-      <div class="welcome-ring">
-        <svg viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="32" stroke="rgba(232,255,71,0.12)" stroke-width="1" stroke-dasharray="4 6"/><circle cx="36" cy="36" r="24" stroke="rgba(0,207,255,0.08)" stroke-width="1" stroke-dasharray="2 8"/></svg>
-        <div class="center-icon">⚡</div>
-      </div>
-      <h2>Cor<span>tex</span> v5</h2>
-      <p>Chat cleared. Fresh start.</p>
-    `;
-    msgs.appendChild(welcome);
-    closePanel('settings-panel');
-    showToast('Chat cleared ✓', true);
+function clearChat(){
+  if(confirm('Clear chat history?')){
+    savedMessages=[];history=[];
+    localStorage.removeItem('cx_chat');localStorage.removeItem('cx_history');
+    document.getElementById('messages').innerHTML='';
+    closePanel('settings-panel');showToast('Chat cleared ✓',true);
   }
 }
+function clearAll(){if(confirm('Reset everything?')){localStorage.clear();location.reload();}}
 
 // ═══ HELPERS ═══
-function autoResize() {
-  const el=document.getElementById('user-input');
-  el.style.height='auto';
-  el.style.height=Math.min(el.scrollHeight,110)+'px';
-}
-
-function showToast(msg, ok=false) {
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className=ok?'show ok':'show';
-  setTimeout(()=>t.className='',3000);
-}
+function autoResize(){const el=document.getElementById('user-input');el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
+function showToast(msg,ok=false){const t=document.getElementById('toast');t.textContent=msg;t.className=ok?'show ok':'show';setTimeout(()=>t.className='',3000);}
 
 document.getElementById('user-input').addEventListener('input',autoResize);
 document.getElementById('user-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
 document.getElementById('mem-input').addEventListener('keydown',e=>{if(e.key==='Enter')addMemory();});
-
 if(synth){synth.getVoices();synth.addEventListener('voiceschanged',()=>synth.getVoices());}
 </script>
 </body>
