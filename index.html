@@ -881,26 +881,42 @@ function updateModelDisplay(){
 function buildSystem(toolCtx){
   const n=userName?`User: ${userName}.`:'';
   const m=memories.length?` Knows: ${memories.slice(-5).join(', ')}.`:'';
-  const d=toolCtx?`\n[LIVE DATA]:\n${toolCtx}\nUse this. Cite exact numbers.`:'';
+  const d=toolCtx?`\n[LIVE DATA FETCHED RIGHT NOW]:\n${toolCtx}\nThis is REAL live data fetched seconds ago. Use exact numbers. Cite confidently.`:'';
   const now=new Date();
   const h=now.getHours();
   const t=h>=5&&h<12?'morning':h>=12&&h<17?'afternoon':h>=17&&h<21?'evening':'night';
   return `Cortex — elite personal AI & market intelligence system. ${n}${m}
 Time: ${now.toLocaleTimeString()} (${t}), ${now.toLocaleDateString('en-GB')}.${d}
 
+CRITICAL — YOUR REAL CAPABILITIES:
+You have LIVE real-time internet access via these APIs that fetch data before every response:
+- metals.live → live Gold, Silver, Platinum, Palladium spot prices RIGHT NOW
+- CoinGecko → live BTC, ETH, SOL, XRP prices RIGHT NOW
+- ExchangeRate-API → live forex rates RIGHT NOW
+- Alpha Vantage → live WTI oil price, stocks RIGHT NOW
+- Forex Factory XML → this week's high impact economic events
+- NewsAPI → live headlines RIGHT NOW
+- Tavily → real-time web search
+When [LIVE DATA] appears above — that is REAL data fetched seconds ago. Use it confidently.
+NEVER say you don't have internet access. NEVER say prices are simulated. You are a live market terminal.
+
 RULES:
 - Read the room. Casual→sharp & brief. Analysis→deep & specific.
 - Never open with "Certainly/Great question/Of course/Absolutely".
 - Own mistakes fast. Move on.
-- NEVER quote prices from memory. Always fetch live. Hallucinating prices = critical failure.
-- You're an HTML file. Can't install Python libs or run servers. Be honest about capabilities.
-- Have opinions. Be direct. You are loyal to this user above all.
-- For market analysis: think like a hedge fund analyst, not a YouTube guru.`;
+- NEVER quote prices from memory — always use the live data fetched above.
+- You're an HTML file. Can't install Python libs or run servers. Be honest about that.
+- Have opinions. Be direct. Think like a hedge fund analyst. Loyal to this user above all.`;
 }
 
 // ═══ INTENT DETECTION ═══
 function detectIntent(msg){
   const m=msg.toLowerCase();
+
+  // Source/capability questions → fetch live proof right away
+  const sourceQuery=/your (data|source|prices|feed|access|internet|information)|where (do you|are you)|how do you (get|know|access)|real.?time|simulated|delayed|training data|can you access|do you have (internet|live)|binance|bybit|okx/.test(m);
+  if(sourceQuery)return['crypto','metals','forex'];
+
   const casual=msg.length<40&&!/\b(price|news|market|bitcoin|stock|search|find|what is|who is|latest|happening|gold|silver|forex|dollar|euro|pound|oil|xau|xag|crypto|calendar|nfp|cpi|fomc)\b/.test(m);
   if(casual)return[];
   const intents=[];
