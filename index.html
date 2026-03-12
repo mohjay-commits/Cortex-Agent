@@ -576,16 +576,20 @@ document.head.appendChild(link);
       <p>Real-time intelligence. Installable. Always on.</p>
       <div class="live-badges">
         <div class="lb lb-s">🔍 Search</div>
-        <div class="lb lb-c">💰 Markets</div>
+        <div class="lb lb-c">💰 Crypto</div>
         <div class="lb lb-n">📰 News</div>
-        <div class="lb lb-u">🌐 URLs</div>
-        <div class="lb lb-p">🔔 Alerts</div>
+        <div class="lb lb-u">🥇 Metals</div>
+        <div class="lb lb-p">💱 Forex</div>
+        <div class="lb lb-s">🛢️ Oil</div>
+        <div class="lb lb-c">📅 FF Calendar</div>
       </div>
       <div class="quick-chips">
-        <div class="chip" onclick="quickSend(`What's happening in the world right now?`)">World news</div>
-        <div class="chip" onclick="quickSend(`What's Bitcoin price right now?`)">BTC price</div>
-        <div class="chip" onclick="quickSend(`Search latest AI news 2026`)">AI news</div>
-        <div class="chip" onclick="quickSend(`Give me a market overview today`)">Markets</div>
+        <div class="chip" onclick="quickSend(`What\`s the gold price right now?`)">Gold price</div>
+        <div class="chip" onclick="quickSend(`Give me live forex rates`)">Forex rates</div>
+        <div class="chip" onclick="quickSend(`What are the high impact economic calendar events this week?`)">FF Calendar</div>
+        <div class="chip" onclick="quickSend(`What\`s Bitcoin price right now?`)">BTC price</div>
+        <div class="chip" onclick="quickSend(`What\`s the crude oil price today?`)">Oil price</div>
+        <div class="chip" onclick="quickSend(`Give me a full market overview right now`)">Market brief</div>
       </div>
     </div>
   </div>
@@ -852,6 +856,19 @@ WHEN YOU HAVE LIVE DATA:
 CRITICAL SELF-AWARENESS:
 You are a single HTML file running in a browser. You CANNOT actually install libraries, run Python, access databases, or implement code on your own. When asked about upgrades or improvements, be honest — describe what CAN be done to your HTML/JS code, not server-side fantasies. Never claim you "implemented" something you haven't. If Jay wants an upgrade, describe it clearly so a developer (or he himself) can actually build it.
 
+LIVE MARKET TOOLS — you have real-time access to:
+- 💰 Crypto (CoinGecko) — BTC, ETH, SOL, BNB, XRP, DOGE and more
+- 🥇 Metals (metals.live) — Gold, Silver, Platinum, Palladium live spot prices
+- 💱 Forex (ExchangeRate-API) — all major currency pairs vs USD
+- 🛢️ Oil & Commodities (Alpha Vantage) — WTI Crude oil price
+- 📅 Forex Factory — high impact economic events this week
+- 📰 News (NewsAPI) — live headlines
+- 🔍 Web search (Tavily) — real time internet search
+- 🌐 URL reader — fetch any webpage
+
+CRITICAL PRICE RULE — NON NEGOTIABLE:
+NEVER quote any price, rate, or financial figure from memory or assumption. If Jay asks about any price — gold, forex, crypto, oil, anything — fetch it live first. If you don't have it say "let me get that live" and fetch it. Hallucinating prices is a critical failure. Jay trades on this information.
+
 RESPONSE FORMAT:
 - Mobile first — short paragraphs, line breaks
 - Bold **key points** only when genuinely useful
@@ -865,11 +882,15 @@ function detectIntent(msg) {
   const intents = [];
 
   // GUARD — never search for casual short messages or corrections
-  const isCasual = msg.length < 40 && !/\b(price|news|market|bitcoin|stock|search|find|what is|who is|latest|happening)\b/.test(m);
+  const isCasual = msg.length < 40 && !/\b(price|news|market|bitcoin|stock|search|find|what is|who is|latest|happening|gold|silver|forex|dollar|euro|pound|oil|xau|xag)\b/.test(m);
   if (isCasual) return [];
 
   if (/https?:\/\/[^\s]+/.test(msg)) intents.push('url');
   if (/\b(bitcoin|btc|ethereum|eth|crypto|solana|sol|bnb|xrp|doge|coin|altcoin|defi|nft|crypto price)\b/.test(m)) intents.push('crypto');
+  if (/\b(gold|silver|platinum|palladium|xau|xag|metals|precious metal)\b/.test(m)) intents.push('metals');
+  if (/\b(forex|currency|dollar|euro|pound|yen|gbp|usd|eur|jpy|aud|cad|chf|exchange rate|fx |currency pair)\b/.test(m)) intents.push('forex');
+  if (/\b(oil|crude|wti|brent|commodity|commodities|natural gas)\b/.test(m) && alphaKey) intents.push('commodities');
+  if (/\b(economic calendar|forex factory|news event|fed|fomc|cpi|nfp|gdp|interest rate|central bank|high impact)\b/.test(m)) intents.push('calendar');
   if (/\b(stock price|share price|market cap|nasdaq|s&p 500|dow jones|aapl|tsla|nvda|amzn|googl|msft|stock ticker)\b/.test(m) && alphaKey) intents.push('stocks');
   if (/\b(news|headlines|breaking|what happened|what's happening|current events)\b/.test(m) && newsKey) intents.push('news');
   if (/\b(search for|look up|find out|what is|who is|tell me about|latest on|recent|2025|2026|right now|currently)\b/.test(m) && tavilyKey && msg.length > 20) intents.push('search');
@@ -923,6 +944,68 @@ async function runTools(msg, intents) {
           results.push(`[NEWS - ${new Date().toLocaleTimeString()}]\n${out}`);
         } else updateTool('News unavailable', 'error');
       }
+      // ═══ METALS — metals.live (no key needed) ═══
+      if (intent === 'metals') {
+        showTool('Fetching live metals prices...', 'loading');
+        const r = await fetch('https://metals.live/api/v1/spot');
+        const d = await r.json();
+        const metals = ['gold','silver','platinum','palladium'];
+        const out = metals.map(m => {
+          const item = d.find(x => x.metal?.toLowerCase() === m);
+          return item ? `${m.toUpperCase()}: $${parseFloat(item.price).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}/oz` : null;
+        }).filter(Boolean).join('\n');
+        updateTool('Live metals prices ✓', 'done');
+        results.push(`[METALS PRICES - ${new Date().toLocaleTimeString()}]\n${out}`);
+      }
+
+      // ═══ FOREX — exchangerate-api (no key needed) ═══
+      if (intent === 'forex') {
+        showTool('Fetching live forex rates...', 'loading');
+        const r = await fetch('https://open.er-api.com/v6/latest/USD');
+        const d = await r.json();
+        if (d.rates) {
+          const pairs = ['EUR','GBP','JPY','AUD','CAD','CHF','NZD','ZAR','NGN'];
+          const out = pairs.map(p => `USD/${p}: ${d.rates[p]?.toFixed(4)}`).filter(Boolean).join('\n');
+          updateTool('Live forex rates ✓', 'done');
+          results.push(`[FOREX RATES - ${new Date().toLocaleTimeString()}]\nBase: USD\n${out}`);
+        } else updateTool('Forex data unavailable', 'error');
+      }
+
+      // ═══ COMMODITIES — Alpha Vantage ═══
+      if (intent === 'commodities' && alphaKey) {
+        showTool('Fetching commodities data...', 'loading');
+        const r = await fetch(`https://www.alphavantage.co/query?function=WTI&interval=daily&apikey=${alphaKey}`);
+        const d = await r.json();
+        const latest = d.data?.[0];
+        if (latest) {
+          updateTool('Commodities data ✓', 'done');
+          results.push(`[COMMODITIES - ${new Date().toLocaleTimeString()}]\nWTI Crude Oil: $${parseFloat(latest.value).toFixed(2)}/barrel\nDate: ${latest.date}`);
+        } else updateTool('Commodities data unavailable', 'error');
+      }
+
+      // ═══ FOREX FACTORY CALENDAR — FF XML feed ═══
+      if (intent === 'calendar') {
+        showTool('Fetching Forex Factory calendar...', 'loading');
+        const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://nfs.faireconomy.media/ff_calendar_thisweek.xml')}`);
+        const d = await r.json();
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(d.contents, 'text/xml');
+        const events = Array.from(xml.querySelectorAll('event'));
+        const high = events.filter(e => e.querySelector('impact')?.textContent === 'High');
+        const out = high.slice(0,10).map(e => {
+          const title = e.querySelector('title')?.textContent || '';
+          const country = e.querySelector('country')?.textContent || '';
+          const date = e.querySelector('date')?.textContent || '';
+          const time = e.querySelector('time')?.textContent || '';
+          const forecast = e.querySelector('forecast')?.textContent || 'N/A';
+          const previous = e.querySelector('previous')?.textContent || 'N/A';
+          return `🔴 ${country} — ${title}\n   ${date} ${time} | Forecast: ${forecast} | Prev: ${previous}`;
+        }).join('\n\n');
+        updateTool('Forex Factory calendar ✓', 'done');
+        results.push(`[FOREX FACTORY — HIGH IMPACT EVENTS THIS WEEK]\n${out || 'No high impact events found'}`);
+      }
+
+      // ═══ SEARCH — Tavily ═══
       if (intent === 'search' && tavilyKey) {
         showTool(`Searching: "${msg.slice(0,35)}..."`, 'loading');
         const r = await fetch('https://api.tavily.com/search', {
